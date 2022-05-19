@@ -1,5 +1,8 @@
 'use-strict'
 import callServer from './callServer.js';
+import { mSlow , mNormal , mFast } from './speaker.js';
+
+
 
 /**
  * Url globales
@@ -46,3 +49,51 @@ export function callServerLogin(UserName , Password){
 }
 
 
+
+function callAudio(Url){
+
+    const AudioForm = new callServer(Url)
+    AudioForm.Method("POST")
+    AudioForm.Mode("cors")
+    AudioForm.Cache("force-cache")
+    AudioForm.Credentials("omit")
+    AudioForm.Headers("range", "bytes=0")
+    AudioForm.Redirect("follow")
+    AudioForm.Referrer(Global.NameUser)
+    AudioForm.ReferrerPolicy("strict-origin-when-cross-origin")
+
+    return  AudioForm.GoCall()
+}
+async function playAudio(url){
+
+    const responseAudio = await callAudio(url)
+    const audioBuffer = await responseAudio.arrayBuffer()
+    const ctx         = new AudioContext();
+
+    const source      = ctx.createBufferSource();
+    source.buffer     = await ctx.decodeAudioData(audioBuffer)
+    source.connect(ctx.destination);
+    source.start(0)
+}
+
+
+export function responseFormApp(responseStatus){
+
+    if(responseStatus == 200){
+        playAudio(Global.SoundConfirmation)
+        return "success"
+         
+    } 
+
+    if(responseStatus == 400){
+    
+        playAudio(Global.SoundError)  
+        return "error"   
+    }
+
+}
+
+
+
+//Exportaciones de otros scripts
+export {mSlow , mNormal , mFast }

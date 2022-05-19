@@ -1,8 +1,7 @@
 'use-strict'
-import { Global ,callServerLogin } from './options.js';
+import { callServerLogin, responseFormApp ,mNormal } from './options.js';
 import React, { useState, createRef } from 'react';
-
-
+import {Base64} from 'js-base64';
 
 
 export default function FormReact() {
@@ -48,54 +47,30 @@ export default function FormReact() {
 
         const response = await callServerLogin(formvalue.userName ,formvalue.password )
 
-        /*
-        const data = await response.text()
-        console.log(response.status)
-        console.log(response.headers)
-        */
+
+        const messageServer64 = response.headers.get("message")
+        const messageServer   = Base64.decode(messageServer64)
+     
+        mNormal(messageServer)
 
         setvalueform({
             userName: formvalue.userName,
             password: formvalue.password,
-            message: response.headers.get("message")
+            message: messageServer,
         });
 
-        switch (response.status) {
-            case 200:
-                setValueStatus({ status: 'success' });
-
-                var responseAudio = await fetch(Global.SoundConfirmation, {
-                    headers: { 'range': 'bytes=0', },
-                })
 
 
-                var audioBuffer = await responseAudio.arrayBuffer()
-                var ctx = new AudioContext();
-                var source = ctx.createBufferSource();
-                source.buffer = await ctx.decodeAudioData(audioBuffer)
-                source.connect(ctx.destination);
-                source.start(0)
+        const token = response.headers.get("token")
+        if (token !=  "") {
 
-                break;
+            localStorage.setItem('token', token);
 
-            case 400:
-
-                setValueStatus({ status: 'error' });
-
-                var responseAudio = await fetch(Global.SoundError, {
-                    headers: { 'range': 'bytes=0', },
-                })
-                var audioBuffer = await responseAudio.arrayBuffer()
-                var ctx = new AudioContext();
-                var source = ctx.createBufferSource();
-                source.buffer = await ctx.decodeAudioData(audioBuffer)
-                source.connect(ctx.destination);
-                source.start(0)
-
-                break;
-            default:
-                break;
         }
+
+        const status = responseFormApp(response.status)
+        setValueStatus({ status: status });
+
     }
 
     function change_focus(evento) {
