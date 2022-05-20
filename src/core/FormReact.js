@@ -1,8 +1,9 @@
 'use-strict'
-import { callServerLogin, responseFormApp ,mNormal } from './options.js';
+import { callServerLogin, responseFormApp  ,sVoice} from './options.js';
 import React, { useState, createRef } from 'react';
 import {Base64} from 'js-base64';
 
+var SVoice = sVoice.Speaker
 
 export default function FormReact() {
 
@@ -16,9 +17,7 @@ export default function FormReact() {
 
     function submitForm(evento) {
         
-        console.log(evento);
-        console.log(evento.target.name);
-        console.log(evento.target.value);
+  
 
         if (evento.target.name === 'userName') {
             setvalueform({
@@ -36,22 +35,24 @@ export default function FormReact() {
 
 
 
-        console.log(formvalue);
+  
 
     }
 
     async function send_form(evento) {
 
-        console.log(formvalue);
+
         evento.preventDefault();
 
         const response = await callServerLogin(formvalue.userName ,formvalue.password )
 
 
         const messageServer64 = response.headers.get("message")
+
         const messageServer   = Base64.decode(messageServer64)
      
-        mNormal(messageServer)
+        SVoice(messageServer)
+   
 
         setvalueform({
             userName: formvalue.userName,
@@ -62,24 +63,48 @@ export default function FormReact() {
 
 
         const token = response.headers.get("token")
-        if (token !=  "") {
+        if (token !==  "") {
 
             localStorage.setItem('token', token);
 
         }
 
         const status = responseFormApp(response.status)
-        setValueStatus({ status: status });
+        const className = "text".concat( " " , status)
+   
+        setValueStatus({ status:  <p className={className} >{messageServer} </p> });
 
+    }
+
+    function voiceInfo (evento)  {
+
+        console.log(evento)
+        console.log(evento.target.name)
+        if (evento.target.name === 'userName') {
+
+            SVoice("Introduce un userName")
+
+        }
+        if (evento.target.name === 'password') {
+
+            SVoice("Introduce una contraseña")
+
+        }
+        
+        if (evento.target.id === "sendButton"){
+            SVoice("Enter para enviar el formulario")
+        }
     }
 
     function change_focus(evento) {
         if (evento.target.name === 'userName' && evento.key === 'Enter') {
             ref2.current.focus();
+       
         }
 
         if (evento.target.name === 'password' && evento.key === 'Enter') {
             ref3.current.focus();
+         
         }
 
     }
@@ -104,6 +129,7 @@ export default function FormReact() {
                 type='text'
                 defaultValue={formvalue.name}
                 placeholder="userName"
+                onFocus={voiceInfo}
                 onInput={submitForm}
                 onKeyPress={change_focus} />
 
@@ -116,13 +142,17 @@ export default function FormReact() {
                 defaultValue={formvalue.password}
                 placeholder="Contraseña"
                 ref={ref2}
+                onFocus={voiceInfo}
                 onInput={submitForm}
                 onKeyPress={change_focus}
             />
-            <p className={"text" + ' ' + status.status} >{formvalue.message} </p>
+            {status.status}
+           
             <button
+                id="sendButton"
                 className='title button'
                 ref={ref3}
+                onFocus={voiceInfo}
                 onClick={send_form}>Acceder Ahora</button>
 
         </form>

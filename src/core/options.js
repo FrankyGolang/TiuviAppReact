@@ -1,6 +1,6 @@
 'use-strict'
 import callServer from './callServer.js';
-import { mSlow , mNormal , mFast } from './speaker.js';
+import { sVoice  } from './sVoice.js';
 
 
 
@@ -12,7 +12,9 @@ const viewNow = document.defaultView.location.pathname;
 
 const lastRoute = document.defaultView.location.pathname.split("/");
 const endRoute  = lastRoute[lastRoute.length-1];
+
 const nameUser  = lastRoute[lastRoute.length-1].replaceAll('@', '');
+
 const securUrl  =   (`https://` + url);
 
 
@@ -79,13 +81,13 @@ async function playAudio(url){
 
 export function responseFormApp(responseStatus){
 
-    if(responseStatus == 200){
+    if(responseStatus === 200){
         playAudio(Global.SoundConfirmation)
         return "success"
          
     } 
 
-    if(responseStatus == 400){
+    if(responseStatus === 400){
     
         playAudio(Global.SoundError)  
         return "error"   
@@ -96,4 +98,4 @@ export function responseFormApp(responseStatus){
 
 
 //Exportaciones de otros scripts
-export {mSlow , mNormal , mFast }
+export {sVoice}

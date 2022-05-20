@@ -5,65 +5,73 @@ import logo from './logo.svg';
 import './App.css';
 
 
-import  FormReact from './core/FormReact.js';
+import FormReact from './core/FormReact.js';
 
-import React, { useEffect , useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { sVoice } from './core/options.js';
 
 
-
+var SVoice = sVoice.Speaker
 
 
 function Example2() {
- const [data2, dataSet2] = useState(Global.NameUser) ;
+  const [data2, dataSet2] = useState(Global.NameUser);
 
- async function GetNameUser2() {
+  async function GetNameUser2() {
 
-   dataSet2(Global.NameUser)
-   
- }
+    dataSet2(Global.NameUser)
 
- useEffect(() => {
-   
-   GetNameUser2()
- 
- }, [data2])
+  }
 
- return (
-     <p>Buenas, buenas {Global.NameUser}</p>
- );
+  function read(){
+    SVoice("Buenas, buenas" + data2)
+  }
+
+  useEffect(() => {
+
+    GetNameUser2()
+
+  }, [data2])
+
+
+  return (
+    <p onClick={read}>Buenas, buenas {Global.NameUser}</p>
+  );
 }
 
 
- function Example() {
+function Example() {
   const [data, dataSet] = useState("")
 
   async function GetNameUser() {
-    const promise  = await fetch(Global.UserView)
+    const promise = await fetch(Global.UserView)
     const response = await promise.text()
     dataSet(response.toString())
   }
 
   useEffect(() => {
-    
+
     GetNameUser()
-  
+
   }, [])
 
   return (
-      <p>Visitas: {data}</p>
+    <p>Visitas: {data}</p>
   );
 }
 
 function App() {
   return (
     <div className="App">
+
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-       
-       <h1>Comenzando Tiuvi</h1>
-       <Example2 /> 
-       <Example /> 
-       <FormReact />
+
+        <h1>Comenzando Tiuvi</h1>
+        <Example2 />
+        <Example />
+        <FormReact />
       </header>
     </div>
   );
