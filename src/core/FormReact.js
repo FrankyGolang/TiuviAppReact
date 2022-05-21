@@ -1,7 +1,10 @@
 'use-strict'
-import { callServerLogin, responseFormApp  ,sVoice} from './options.js';
+import { callServerLogin, responseFormApp  ,sVoice, Voicer} from './options.js';
 import React, { useState, createRef } from 'react';
 import {Base64} from 'js-base64';
+
+
+//simplificar formulario 
 
 var SVoice = sVoice.Speaker
 
@@ -17,7 +20,7 @@ export default function FormReact() {
 
     function submitForm(evento) {
         
-  
+  console.log(evento)
 
         if (evento.target.name === 'userName') {
             setvalueform({
@@ -41,7 +44,7 @@ export default function FormReact() {
 
     async function send_form(evento) {
 
-
+        console.log(evento)
         evento.preventDefault();
 
         const response = await callServerLogin(formvalue.userName ,formvalue.password )
@@ -76,27 +79,8 @@ export default function FormReact() {
 
     }
 
-    function voiceInfo (evento)  {
-
-        console.log(evento)
-        console.log(evento.target.name)
-        if (evento.target.name === 'userName') {
-
-            SVoice("Introduce un userName")
-
-        }
-        if (evento.target.name === 'password') {
-
-            SVoice("Introduce una contraseña")
-
-        }
-        
-        if (evento.target.id === "sendButton"){
-            SVoice("Enter para enviar el formulario")
-        }
-    }
-
     function change_focus(evento) {
+
         if (evento.target.name === 'userName' && evento.key === 'Enter') {
             ref2.current.focus();
        
@@ -119,41 +103,49 @@ export default function FormReact() {
             method="post"
             rel='external'
             target='_top' >
-            <header
-                className='title textcenter'> Inscripción en Tiuvi </header>
-            <label htmlFor='userName' className='labelform text'>Nombre en tiuvi</label>
-            <input
-                id='userName'
-                className='text camposform'
-                name='userName'
-                type='text'
-                defaultValue={formvalue.name}
-                placeholder="userName"
-                onFocus={voiceInfo}
-                onInput={submitForm}
-                onKeyPress={change_focus} />
+   
+            <Voicer 
+            element="header" 
+            voicerText="Inscripción en Tiuvi" />
 
-            <label htmlFor='password' className='labelform text'>Contraseña</label>
-            <input
-                id='password'
-                className='text camposform'
-                name='password'
-                type='password'
-                defaultValue={formvalue.password}
-                placeholder="Contraseña"
+            <Voicer 
+                element="input"
+                textLabel="Contraseña"
+                
+                 id='userName'
+                 name='userName'
+                 type='text'
+                 autocomplete="username"
+                 defaultValue={formvalue.name}
+                 placeholder="userName"
+            
+                 onInput={submitForm}
+                 onKeyPress={change_focus}
+                 voicerText=" Introduce un user name"
+            />
+           
+            <Voicer 
                 ref={ref2}
-                onFocus={voiceInfo}
-                onInput={submitForm}
-                onKeyPress={change_focus}
+                element="input"
+                textLabel="Contraseña"
+
+                 id='password'
+                 name='password'
+                 type='password'
+                 autocomplete="new-password"
+                 defaultValue={formvalue.password}
+                 placeholder="Contraseña"
+            
+                 onInput={submitForm}
+                 onKeyPress={change_focus}
+                 voicerText=" Introduce una contraseña"
             />
             {status.status}
            
-            <button
-                id="sendButton"
-                className='title button'
+            <Voicer
+                element="button"
                 ref={ref3}
-                onFocus={voiceInfo}
-                onClick={send_form}>Acceder Ahora</button>
+                onClick={send_form} voicerText="Acceder Ahora" />
 
         </form>
     );

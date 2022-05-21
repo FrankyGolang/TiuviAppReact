@@ -13,9 +13,7 @@ code {
 }
 
 /* Correciones */
-body{
-  margin:0px;
-}
+
 pre{
   white-space: pre-wrap;
   margin:0px;
@@ -49,28 +47,7 @@ u:hover{
   background-color: darkorange;
 }
 
-/* Correciones */
 
-/* ⚡⚡ Principales estilos de la pagina de administracion ⚡⚡ */
-amp-selector[role=tablist].tabs-with-selector {
-display: flex;align-items: center;justify-content: center;position:fixed;bottom:0px;width: 100%;
-background: #0000005e;
-height: 50px;
-}
-amp-selector[role=tablist].tabs-with-selector [role=tab] {
-width: 100%;text-align: center;
-}
-amp-selector.tabpanels [role=tabpanel] {display: none;}
-amp-selector.tabpanels [role=tabpanel][selected] {outline: none;display: block;}
-amp-selector[role=tablist].tabs-with-selector [role=tab][selected] {outline: none;
-border-top: 2px solid white;
-}
-amp-selector[role=tablist].tabs-with-selector [role=tab][selected]:hover {outline: none;
-border-top: 2px solid white;
-animation-name: menuhome_animation;
-animation-duration: 2s;
-animation-timing-function:ease;
-}
 .menuhome{
 color:white;
 }
@@ -95,14 +72,9 @@ animation-timing-function:linear;
 50%  {color:skyblue; border-color:skyblue; }
 100% {color:white;border-color:white; }
 }
-body{
-  padding-bottom: 50px;
-}
 
 
 
-
-/*🛑 end final estilos pagina de administracion 🛑 */
 
 *{
 box-sizing: border-box;
@@ -118,6 +90,7 @@ font-size: 32px;
 margin-top:10px;
 margin-bottom:10px;
 width: auto;
+cursor:pointer;
 }
 /* 🌐 PARRAFOS Y ENLACES 🌐 */
 .text, .link {
@@ -127,6 +100,7 @@ font-weight: 400;
 font-size:25px;
 line-height: 40px;
 color:black;
+cursor:pointer;
 } 
 .text::first-letter {
   font-size: 200%;
@@ -326,12 +300,14 @@ line-height: 30px;
   font-weight: 500;
 }
 .camposform{
+  
   transition-duration: 1s;
   border: none;
   outline: none;
   border-radius: 8px;
   border-left: solid black 1px;
   border-bottom: solid 3px black;
+  cursor:text;
 }
 .camposform:focus{
   border-left: solid blue 1px;
@@ -430,12 +406,6 @@ line-height: 30px;
 }
 
 
-
-
-/*🌐 Seccion de imagenes 🌐 */
-amp-img.oneimage img {
-  object-fit: contain;
-}
 .oneimagediv {
 position: relative;
 width: 100%;
@@ -596,13 +566,7 @@ background-image: -webkit-linear-gradient(-30deg , transparent, blue 119%,transp
 }
 
 
-/* Iconos de redes sociales */
-amp-social-share.rounded {
-  border-radius: 50%;
-  background-size: 60%;
-  color:  #fff;
- /* background-color: #005AF0; */
-}
+
 
 
 
