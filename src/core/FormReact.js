@@ -1,12 +1,14 @@
 'use-strict'
-import { callServerLogin, responseFormApp  ,sVoice, Voicer} from './options.js';
+import { callServerLogin, responseFormApp , sVoice,Voicer, Reader} from './options.js';
 import React, { useState, createRef } from 'react';
 import {Base64} from 'js-base64';
+
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 
 //simplificar formulario 
 
-var SVoice = sVoice.Speaker
 
 export default function FormReact() {
 
@@ -54,7 +56,7 @@ export default function FormReact() {
 
         const messageServer   = Base64.decode(messageServer64)
      
-        SVoice(messageServer)
+        sVoice.Speaker(messageServer)
    
 
         setvalueform({
@@ -93,8 +95,10 @@ export default function FormReact() {
 
     }
 
+ 
 
     return (
+        <> 
         <form
             id='alice_form'
             className='onesection headeracordeon marginall '
@@ -148,6 +152,25 @@ export default function FormReact() {
                 onClick={send_form} voicerText="Acceder Ahora" />
 
         </form>
+         <Box
+         component="form"
+         sx={{
+           '& > :not(style)': { m: 1, width: '25ch' },
+         }}
+         noValidate
+         autoComplete="off"
+       >
+
+         <TextField 
+         id="standard-basic" 
+         label="Standard" 
+         variant="standard"
+         onFocus={Reader}
+         inputProps= {{'aria-label': 'myAriaLabel'}}
+       
+         />
+       </Box>
+       </>
     );
 
 

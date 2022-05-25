@@ -1,6 +1,6 @@
 'use-strict'
 import callServer from './callServer.js';
-import { sVoice ,Voicer } from './sVoice.js';
+import { sVoice ,Voicer, Reader } from './sVoice.js';
 
 
 
@@ -98,4 +98,4 @@ export function responseFormApp(responseStatus){
 
 
 //Exportaciones de otros scripts
-export {sVoice, Voicer}
+export {sVoice, Voicer, Reader}

@@ -88,21 +88,22 @@ export const sVoice = {
 
 }
 
+export function Reader(event){
+    console.log(event)
+
+    if (event.target.innerText !== ""){
+
+        sVoice.Speaker(event.target.innerText)
+    }else if(event.target.ariaLabel !== ""){
+
+        sVoice.Speaker(event.target.ariaLabel) 
+    }
+}
 
 export function Voicer(props){
     
 
-    function Reader(event){
-        console.log(event)
 
-        if (event.target.innerText !== ""){
-
-            sVoice.Speaker(event.target.innerText)
-        }else if(event.target.ariaLabel !== ""){
-
-            sVoice.Speaker(event.target.ariaLabel) 
-        }
-    }
 
     //Propiedades comunes
     let className = ""
