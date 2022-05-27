@@ -15,16 +15,16 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 
 import Box from '@mui/material/Box';
-import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
-import { green, grey, red, blue } from '@mui/material/colors';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {  blueGrey, grey } from '@mui/material/colors';
 
 
-import React, { useState } from 'react';
+import React, { useContext , useState } from 'react';
 
 
 import ScopedCssBaseline from '@mui/material/ScopedCssBaseline';
 
-import { styled } from '@mui/material/styles';
+import Fade from '@mui/material/Fade';
 
 
 let Theme = createTheme()
@@ -84,9 +84,11 @@ function styleText(FW, newAtr) {
     },
   }
 
-  if (newAtr != undefined) {
+  if (newAtr !== undefined) {
 
-    styleText[newAtr.name] = newAtr.value
+    var i = newAtr.length; while (i--) {
+      styleText[newAtr[i].name] = newAtr[i].value
+    }
 
   }
 
@@ -96,7 +98,7 @@ function styleText(FW, newAtr) {
 
 function NewTypography(mode, tag, style) {
 
- 
+
 
   CTheme[mode].components.MuiTypography.variants ??= []
 
@@ -112,7 +114,7 @@ function NewTypography(mode, tag, style) {
     CTheme[mode].components.MuiTypography.defaultProps.variantMapping[tag] = tag
 
   }
- 
+
 }
 
 const getDesignTokens = (mode) => ({
@@ -130,7 +132,9 @@ const getDesignTokens = (mode) => ({
     subtitle1: styleText(400),
     subtitle2: styleText(500),
     body1: styleText(400),
-    body2: styleText(400, { name: "&:first-letter", value: { fontSize: "200%", fontWeight: 500, } }),
+    body2: styleText(400, [
+      { name: "&:first-letter", value: { fontSize: "200%", fontWeight: 500, } }
+    ]),
     button: styleTitle(600),
     caption: styleText(400),
     overline: styleText(400),
@@ -155,15 +159,44 @@ const getDesignTokens = (mode) => ({
     text: {
       ...(mode === 'light' ? {
         primary: grey[900],
-        secondary: grey[800],
+        //Hover
+        secondary: "mediumblue",
       }
         : { //dark
-          primary: green[200],
-          secondary: grey[500],
+          primary: blueGrey[100],
+          //Hover
+          secondary: "deepskyblue",
         }),
     },
   },
 
+  transitions: {
+    duration: {
+      shortest: 150,
+      shorter: 200,
+      short: 250,
+      long: 1000,
+      //tiempo recomendado más básico
+      standard: 300,
+     //esto es para ser usado en animaciones complejas
+      complex: 375,
+     //recomendado cuando algo está entrando en la pantalla
+      enteringScreen: 225,
+      //recomendado cuando algo sale de la pantalla
+      leavingScreen: 195,
+    },
+      easing: {
+      //Esta es la curva de aceleración más común.
+      easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+     //Los objetos ingresan a la pantalla a toda velocidad desde fuera de la pantalla y
+     //desacelerar lentamente hasta un punto de reposo.
+      easeOut: 'cubic-bezier(0.0, 0, 0.2, 1)',
+     //Los objetos salen de la pantalla a toda velocidad. No desaceleran cuando están fuera de la pantalla.
+      easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
+     //La curva pronunciada es utilizada por objetos que pueden volver a la pantalla en cualquier momento.
+      sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
+    },
+  },
 });
 
 const CTheme = {
@@ -172,65 +205,151 @@ const CTheme = {
 }
 
 
+
+
+
 function Mark(props) {
 
-  NewTypography(props.mode, "mark", { name: "backgroundColor", value: "lightskyblue" })
+  const Global = useContext(GlobalContext);
+
+  NewTypography(Global.mode, "mark", [
+    { name: "backgroundColor", value: "lightskyblue" },
+    { name: "borderRadius", value: "5px" },
+    { name: "cursor", value: "pointer" },
+    { name: "&:hover",    value: { backgroundColor: "cornflowerblue", } },
+   { name: "transition",    value: `${CTheme[Global.mode].transitions.create('background-color', {
+    duration: CTheme[Global.mode].transitions.duration.long,})}` },
+  ])
 
   return (
+
     <Typography variant="mark">{props.children}</Typography>
+
   )
 
 }
 
 function Em(props) {
 
-  NewTypography(props.mode, "em", { name: "backgroundColor", value: "lawngreen" })
+  const Global = useContext(GlobalContext);
+
+  NewTypography(Global.mode, "em", [
+    { name: "backgroundColor", value: "lawngreen" },
+    { name: "borderRadius", value: "5px" },
+    { name: "color", value: "black" },
+    { name: "cursor", value: "pointer" },
+    { name: "&:hover", value: { backgroundColor: "seagreen", } },
+    { name: "transition",    value: `${CTheme[Global.mode].transitions.create('background-color', {
+      duration: CTheme[Global.mode].transitions.duration.long,})}` },
+  ])
 
   return (
+
     <Typography variant="em">{props.children}</Typography>
+
   )
 
 }
 
 function U(props) {
 
-  NewTypography(props.mode, "u", { name: "backgroundColor", value: "orange" })
+  const Global = useContext(GlobalContext);
+
+  NewTypography(Global.mode, "u", [
+    { name: "backgroundColor", value: "orange" },
+    { name: "borderRadius", value: "5px" },
+    { name: "color", value: "black" },
+    { name: "cursor", value: "pointer" },
+    { name: "textDecoration", value: "none" },
+    { name: "&:hover", value: { backgroundColor: "darkorange", } },
+    { name: "transition",    value: `${CTheme[Global.mode].transitions.create('background-color', {
+      duration: CTheme[Global.mode].transitions.duration.long,})}` },
+  ])
 
   return (
+   
     <Typography variant="u">{props.children}</Typography>
+ 
+  
+  )
+
+}
+
+function A(props) {
+
+  const Global = useContext(GlobalContext);
+  
+  console.log("a element", Global.mode)
+  NewTypography(Global.mode, "a", [
+    { name: "borderRadius", value: "5px" },
+    { name: "color", value: "text.primary" },
+    { name: "cursor", value: "pointer" },
+    { name: "textDecoration", value: "underline" },
+    { name: "&:hover", value: { "color": "skyblue", } },
+    { name: "transition",    value: `${CTheme[Global.mode].transitions.create('color', {
+      duration: CTheme[Global.mode].transitions.duration.long,})}` },
+  ])
+
+  return (
+    <Typography variant="a">{props.children}</Typography>
+
   )
 
 }
 
 
+let themeMode = localStorage.getItem('themeMode');
+
+console.log(themeMode)
+if ( themeMode === null ){
+
+  themeMode = "light"
+  localStorage.setItem('themeMode', 'light');
+
+}
+
+const global = {
+  mode: themeMode,
+  toggleTheme: () => {},
+}
+
+
+const GlobalContext = React.createContext(global);
+
+
+function ToggleButton(props){
+
+  const Global = useContext(GlobalContext);
+
+  console.log("ToggleButton: ", global.mode)
+  return(
+    <IconButton sx={{ ml: 1 }}  color="inherit" onClick={global.toggleTheme}>
+    {Global.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+  </IconButton>
+  )
+}
+
+
 export default function App() {
 
-  //  const theme = useTheme();
-  //console.log(theme)
 
-  //Refactorizar este hook en un archivo apaerte que modifique el tema + el json de arriva.
-  const [mode, setMode] = useState('light');
+  const [mode, setMode] = useState(global.mode);
+   global.toggleTheme = () => {
 
+    setMode(() => {
 
-
-  function colorMode() {
-
-    setMode(mode === "light" ? "dark" : "light");
-
+      global.mode = global.mode === "light" ? "dark" : "light"
+      localStorage.setItem('themeMode', global.mode);
+      return global.mode
+    })
   }
-
-  // cachear el modo tema.
-
-  console.log(CTheme[mode])
-
-
-
 
 
   return (
 
+<GlobalContext.Provider value={global}>
 
-    <ThemeProvider theme={CTheme[mode]}>
+    <ThemeProvider theme={CTheme[global.mode]}>
       <ScopedCssBaseline enableColorScheme >
 
 
@@ -244,18 +363,23 @@ export default function App() {
             justifyContent: 'center',
             bgcolor: 'background.default',
             color: 'text.primary',
-            borderRadius: 1,
+        
 
           }}
         >
 
-          <IconButton sx={{ ml: 1 }} onClick={colorMode} color="inherit">
-            {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
+          <ToggleButton />
 
-          <Mark mode={mode}>Provando nuevo mark</Mark>
-          <Em mode={mode}>Provando nuevo Em</Em>
-          <U mode={mode} >Provando nuevo U</U>
+          <IconButton sx={{ ml: 1 }}  color="inherit" onClick={global.toggleTheme}>
+
+            {global.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+        </IconButton>
+
+          <Mark >Provando nuevo mark</Mark>
+          <Em >Provando nuevo Em</Em>
+          <U  >Provando nuevo U</U>
+          <A >Provando nuevo U</A>
+
 
 
           <Typography variant="h1">Responsive Responsive Responsive</Typography>
@@ -274,12 +398,13 @@ export default function App() {
           <Typography variant="caption">Esto es un subtitulo</Typography>
           <Typography variant="overline">Responsive Responsive Responsive</Typography>
 
-          <p>This is a {mode} mode theme with custom palette</p>
+          <p>This is a mode theme with custom palette</p>
 
           <FormReact />
         </Box>
       </ScopedCssBaseline>
     </ThemeProvider>
+    </GlobalContext.Provider>
 
   );
 }
