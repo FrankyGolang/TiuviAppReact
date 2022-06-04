@@ -1,6 +1,7 @@
 'use-strict'
 import callServer from './callServer.js';
 import { sVoice ,Voicer, Reader } from './sVoice.js';
+import React, { createContext } from 'react';
 
 
 
@@ -18,7 +19,28 @@ const nameUser  = lastRoute[lastRoute.length-1].replaceAll('@', '');
 const securUrl  =   (`https://` + url);
 
 
+//Migrar localStorage a otro fichero
+let themeMode = localStorage.getItem('themeMode');
 
+console.log(themeMode)
+if (themeMode === null) {
+
+    themeMode = "light"
+    localStorage.setItem('themeMode', 'light');
+
+}
+
+let Voice = localStorage.getItem('Voice');
+
+console.log(Voice)
+if (Voice === null) {
+
+    Voice = "on"
+    localStorage.setItem('themeMode', 'light');
+
+}
+
+//Contexto para javascript
 export const Global = {
     SecureUrl:  (`https://` + url),
     SoundConfirmation: (securUrl + "/mp3/soundConfirmation.mp3"),
@@ -31,7 +53,18 @@ export const Global = {
     UserLogin: (securUrl + "/app/login"),
     UserReferer: (securUrl + "/app/referer"),
     UserView:(securUrl + "/app/view"),
+
+    mode: themeMode,
+    toggleTheme: () => { },
+
+    Voice: Voice,
+    toggleVoice: () => { },
+
+    
 };
+
+//Contexto para react
+export const GlobalContext = createContext(Global);
 
 
 export function callServerLogin(UserName , Password){

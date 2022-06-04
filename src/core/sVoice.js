@@ -10,8 +10,9 @@ utterance.volume = 100
 utterance.pitch = 0.9
 utterance.rate = 0.9
 utterance.text = ""
-let lang = "fr-FR" , name = "Google français"
+let lang = "es-ES" , name = "Google español"
 let voices = speechSynthesis.getVoices();
+
 if (voices.length > 0) {
 
     utterance.voice = voices.find(voices => voices.lang === lang || voices.name === name)
@@ -25,13 +26,15 @@ if (voices.length > 0) {
         speechSynthesis.onvoiceschanged = () => {
 
             voices = speechSynthesis.getVoices();
-
+       
             utterance.voice = voices.find(voices => voices.lang === lang || voices.name === name)
         
             sVoice.Voices = voices
+           
         }
     }
 
+//Cache de mensajes, para no repetirlos
 let Messages = []
 export const sVoice = {
     Utterance: utterance,
@@ -94,11 +97,13 @@ export function Reader(event){
     if (event.target.innerText !== ""){
 
         sVoice.Speaker(event.target.innerText)
-    }else if(event.target.ariaLabel !== ""){
+    }else if(event.target.dataset.voice !== ""){
 
-        sVoice.Speaker(event.target.ariaLabel) 
+        sVoice.Speaker(event.target.dataset.voice) 
     }
 }
+
+
 
 export function Voicer(props){
     

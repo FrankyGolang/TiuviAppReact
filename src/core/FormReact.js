@@ -4,13 +4,15 @@ import React, { useState, createRef } from 'react';
 import {Base64} from 'js-base64';
 
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+
+import { InputOutlined, InputOutlinedRecognition } from "./inputs.js"
 
 
-//simplificar formulario 
 
 
 export default function FormReact() {
+
+
 
     let [formvalue, setvalueform] = useState({ userName: '', password: '', data:"" });
 
@@ -20,33 +22,20 @@ export default function FormReact() {
     const ref2 = createRef();
     const ref3 = createRef();
 
-    function submitForm(evento) {
-        
-  console.log(evento)
-
-        if (evento.target.name === 'userName') {
-            setvalueform({
-                userName: evento.target.value,
-                password: formvalue.password
-            });
-        }
-
-        if (evento.target.name === 'password') {
-            setvalueform({
-                password: evento.target.value,
-                userName: formvalue.userName
-            });
-        }
 
 
 
+    function UpdateForm(evento) {
   
-
+            setvalueform(prevState => ({                   
+                ...prevState,    
+                [evento.target.name]: evento.target.value, 
+            }))
+        
     }
 
     async function send_form(evento) {
 
-        console.log(evento)
         evento.preventDefault();
 
         const response = await callServerLogin(formvalue.userName ,formvalue.password )
@@ -112,37 +101,43 @@ export default function FormReact() {
             element="header" 
             voicerText="Inscripción en Tiuvi" />
 
-            <Voicer 
+
+
+            <InputOutlinedRecognition 
                 element="input"
-                textLabel="Contraseña"
-                
+                label="Username"
+           
+                sx={{ backgroundColor: 'background.default' }}
+
                  id='userName'
                  name='userName'
                  type='text'
                  autocomplete="username"
-                 defaultValue={formvalue.name}
                  placeholder="userName"
             
-                 onInput={submitForm}
+                 inputProps={{'data-voice': "Introduce una user name"}}
                  onKeyPress={change_focus}
-                 voicerText=" Introduce un user name"
+               
             />
            
-            <Voicer 
+       
+            <InputOutlined 
                 ref={ref2}
                 element="input"
-                textLabel="Contraseña"
+                label="Contraseña"
+                value={formvalue.password}
 
                  id='password'
                  name='password'
                  type='password'
                  autocomplete="new-password"
-                 defaultValue={formvalue.password}
+               
+                
                  placeholder="Contraseña"
-            
-                 onInput={submitForm}
+                 inputProps={{'data-voice': "Introduce una contraseña"}}
+                 onChange={UpdateForm}
                  onKeyPress={change_focus}
-                 voicerText=" Introduce una contraseña"
+                
             />
             {status.status}
            
@@ -152,24 +147,7 @@ export default function FormReact() {
                 onClick={send_form} voicerText="Acceder Ahora" />
 
         </form>
-         <Box
-         component="form"
-         sx={{
-           '& > :not(style)': { m: 1, width: '25ch' },
-         }}
-         noValidate
-         autoComplete="off"
-       >
 
-         <TextField 
-         id="standard-basic" 
-         label="Standard" 
-         variant="standard"
-         onFocus={Reader}
-         inputProps= {{'aria-label': 'myAriaLabel'}}
-       
-         />
-       </Box>
        </>
     );
 
