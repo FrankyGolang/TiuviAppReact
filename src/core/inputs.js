@@ -23,17 +23,12 @@ import MicIcon from '@mui/icons-material/Mic';
 
 
 
+function Recognition(props){
 
-
-export function InputOutlined(props) {
-
-    const Global = useContext(GlobalContext);
-
-    const [recording, setColor] = useState("buttonInactive");
     async function Recognition() {
 
         const startRecognition = await sListener.Recogniter()
-        setColor("buttonActive")
+        props.updateColor("buttonActive")
         if (startRecognition) {
     
             while (sListener.Starter()) {
@@ -50,9 +45,32 @@ export function InputOutlined(props) {
                 }
             }
         }
-        setColor("buttonInactive")
+        props.updateColor("buttonInactive")
     }
-   
+
+    return(
+        <InputAdornment
+        position="end"
+     >
+        <IconButton
+            color={props.color}
+            onClick={Recognition}
+            aria-label="recognition"
+            edge="end"
+        >
+            <MicIcon />
+        </IconButton>
+    </InputAdornment>
+    )
+}
+
+
+
+export function InputOutlined(props) {
+
+    const Global = useContext(GlobalContext);
+
+    const [recording, setColor] = useState("buttonInactive");
 
     return (
         <OutlinedInput
@@ -61,24 +79,11 @@ export function InputOutlined(props) {
             {...(Global.recognition === "on" && { endAdornment: 
                 <>
                         {props.endAdornment ? props.endAdornment : null}
-                        <InputAdornment
-                            position="end"
-                         >
-                            <IconButton
-                                color={recording}
-                                onClick={Recognition}
-                                aria-label="recognition"
-                                edge="end"
-                            >
-                                <MicIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    </>,
+                        <Recognition  update={props.update} updateColor={setColor} color={recording} />
+                </>,
                     }
             )}
             
-
-        
             onFocus={Global.Voice === "on" ? Reader : undefined}
             
         />
