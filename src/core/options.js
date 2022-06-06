@@ -19,10 +19,11 @@ const nameUser  = lastRoute[lastRoute.length-1].replaceAll('@', '');
 const securUrl  =   (`https://` + url);
 
 
+
+
+
 //Migrar localStorage a otro fichero
 let themeMode = localStorage.getItem('themeMode');
-
-console.log(themeMode)
 if (themeMode === null) {
 
     themeMode = "light"
@@ -31,14 +32,24 @@ if (themeMode === null) {
 }
 
 let Voice = localStorage.getItem('Voice');
-
-console.log(Voice)
 if (Voice === null) {
 
     Voice = "on"
-    localStorage.setItem('themeMode', 'light');
+    localStorage.setItem('Voice', 'on');
 
 }
+
+let recognition = localStorage.getItem('recognition');
+if (recognition === null) {
+
+    recognition = "on"
+    localStorage.setItem('recognition', 'on');
+
+}
+
+
+
+
 
 //Contexto para javascript
 export const Global = {
@@ -60,6 +71,8 @@ export const Global = {
     Voice: Voice,
     toggleVoice: () => { },
 
+    recognition: recognition,
+    toggleRecognition: () => { },
     
 };
 

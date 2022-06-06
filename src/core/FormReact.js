@@ -5,40 +5,36 @@ import {Base64} from 'js-base64';
 
 import Box from '@mui/material/Box';
 
-import { InputOutlined, InputOutlinedRecognition } from "./inputs.js"
+import { InputOutlined } from "./inputs.js"
 
-
+//Pasword
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 
 export default function FormReact() {
 
 
 
-    let [formvalue, setvalueform] = useState({ userName: '', password: '', data:"" });
-
-    let [status, setValueStatus] = useState({ status: '' });
-
+    let [userName, setUserName] = useState('');
+    let [password, setPasword] = useState('');
+    let [status,   setValueStatus] = useState('');
+    let [showPassword,   setShowPassword] = useState('password');
+    
 
     const ref2 = createRef();
     const ref3 = createRef();
 
 
-
-
-    function UpdateForm(evento) {
   
-            setvalueform(prevState => ({                   
-                ...prevState,    
-                [evento.target.name]: evento.target.value, 
-            }))
-        
-    }
 
     async function send_form(evento) {
 
         evento.preventDefault();
 
-        const response = await callServerLogin(formvalue.userName ,formvalue.password )
+        const response = await callServerLogin(userName ,password )
 
 
         const messageServer64 = response.headers.get("message")
@@ -48,14 +44,6 @@ export default function FormReact() {
         sVoice.Speaker(messageServer)
    
 
-        setvalueform({
-            userName: formvalue.userName,
-            password: formvalue.password,
-            message: messageServer,
-        });
-
-
-
         const token = response.headers.get("token")
         if (token !==  "") {
 
@@ -64,9 +52,10 @@ export default function FormReact() {
         }
 
         const status = responseFormApp(response.status)
+
         const className = "text".concat( " " , status)
    
-        setValueStatus({ status:  <p className={className} >{messageServer} </p> });
+        setValueStatus( <p className={className} >{messageServer} </p> );
 
     }
 
@@ -103,10 +92,11 @@ export default function FormReact() {
 
 
 
-            <InputOutlinedRecognition 
+            <InputOutlined
                 element="input"
                 label="Username"
-           
+                value={userName}
+
                 sx={{ backgroundColor: 'background.default' }}
 
                  id='userName'
@@ -116,8 +106,10 @@ export default function FormReact() {
                  placeholder="userName"
             
                  inputProps={{'data-voice': "Introduce una user name"}}
+                 onChange={(event) => setUserName(event.target.value)
+                 }
                  onKeyPress={change_focus}
-               
+                update={setUserName}
             />
            
        
@@ -125,21 +117,35 @@ export default function FormReact() {
                 ref={ref2}
                 element="input"
                 label="Contraseña"
-                value={formvalue.password}
+                value={password}
 
                  id='password'
                  name='password'
-                 type='password'
+                 type={showPassword}
                  autocomplete="new-password"
                
-                
+               
+                    endAdornment={ <InputAdornment position="end">
+                      <IconButton
+                      color={showPassword === "password" ?  "buttonInactive": "buttonActive"}
+                        aria-label="toggle password visibility"
+                        onClick={()=> { showPassword === "password" ? setShowPassword('text') : setShowPassword('password')}}
+                        edge="end"
+                      >
+                        {showPassword === "password" ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  
+
+
                  placeholder="Contraseña"
                  inputProps={{'data-voice': "Introduce una contraseña"}}
-                 onChange={UpdateForm}
+                 onChange={  (event) => setPasword(event.target.value)}
                  onKeyPress={change_focus}
-                
+                 update={setPasword}
             />
-            {status.status}
+            {status}
            
             <Voicer
                 element="button"

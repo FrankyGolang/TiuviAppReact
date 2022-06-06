@@ -8,7 +8,7 @@ import { GlobalContext } from './options.js'
 import { Reader } from './sVoice.js'
 
 //Material ui
-import TextField from '@mui/material/TextField';
+import { OutlinedInput } from '@mui/material';
 
 //    {...(Global.Voice === "on" && { onFocus: Reader})}
 
@@ -22,73 +22,68 @@ import IconButton from '@mui/material/IconButton';
 import MicIcon from '@mui/icons-material/Mic';
 
 
+
+
+
 export function InputOutlined(props) {
 
     const Global = useContext(GlobalContext);
 
-    return (<TextField
-        {...props}
-
-        variant="outlined"
-        onFocus={Global.Voice === "on" ? Reader : undefined}
-
-    />)
-}
-
-
-
-
-export function InputOutlinedRecognition(props) {
-
-    const Global = useContext(GlobalContext);
-
-  
-
-    let [formvalue, setvalueform] = useState('');
-
-    function UpdateForm(evento) {
-
-        setvalueform(evento.target.value)
-
-    }
-
-
-    async function Recognition(event) {
+    const [recording, setColor] = useState("buttonInactive");
+    async function Recognition() {
 
         const startRecognition = await sListener.Recogniter()
+        setColor("buttonActive")
         if (startRecognition) {
-
+    
             while (sListener.Starter()) {
+    
+                if (!sListener.Starter()){
+                    await new Promise(r => setTimeout(r, 250));
+                }
 
                 const results = await sListener.Results()
 
-                setvalueform(results)
+                if(results.length > 0){
+                    props.update((prevState) => prevState + results[0])
+                    results.shift()
+                }
             }
         }
+        setColor("buttonInactive")
     }
+   
 
+    return (
+        <OutlinedInput
+            {...props}
 
-    return (<TextField
-        {...props}
-        onChange={UpdateForm}
-        value={formvalue}
-        InputProps={{
-            endAdornment: <InputAdornment
-                position="end"
-                variant="outlined">
-                <IconButton
-                    onClick={Recognition}
-                    aria-label="recognition"
-                    name='userName'
-                    edge="end"
-                >
-                    <MicIcon />
-                </IconButton>
+            {...(Global.recognition === "on" && { endAdornment: 
+                <>
+                        {props.endAdornment ? props.endAdornment : null}
+                        <InputAdornment
+                            position="end"
+                         >
+                            <IconButton
+                                color={recording}
+                                onClick={Recognition}
+                                aria-label="recognition"
+                                edge="end"
+                            >
+                                <MicIcon />
+                            </IconButton>
+                        </InputAdornment>
+                    </>,
+                    }
+            )}
+            
 
-            </InputAdornment>,
-        }}
-        variant="outlined"
-        onFocus={Global.Voice === "on" ? Reader : undefined}
-
-    />)
+        
+            onFocus={Global.Voice === "on" ? Reader : undefined}
+            
+        />
+    )
 }
+
+
+

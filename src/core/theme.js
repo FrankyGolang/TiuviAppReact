@@ -57,6 +57,23 @@ const Themer = (mode) => ({
                 secondary: "deepskyblue",
             }),
         },
+        
+        buttonInactive: {
+            ...(mode === 'light' ? {
+                main: "rgba(0, 0, 0, 0.54)",
+            } : {
+                //dark
+                main: blueGrey[100],
+            }),
+        },
+        buttonActive: {
+            ...(mode === 'light' ? {
+                main: "rgb(100,149,237)",
+            } : {
+                //dark
+                main: blueGrey[400],
+            }),
+        },
     },
 
     transitions: {

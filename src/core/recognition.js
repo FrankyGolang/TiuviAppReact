@@ -142,7 +142,7 @@ export const sListener = {
     async Results(){
         
         await new Promise(r => setTimeout(r, 250));
-        return rctMsg.join("")
+        return rctMsg
     }
 }
 
