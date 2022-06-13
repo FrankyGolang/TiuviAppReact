@@ -1,9 +1,7 @@
 'use-strict'
-import { callServerLogin, responseFormApp , sVoice,Voicer, Reader} from './options.js';
+import { callServerLogin, responseFormApp } from './options.js';
 import React, { useState, createRef } from 'react';
-import {Base64} from 'js-base64';
 
-import Box from '@mui/material/Box';
 
 import { InputOutlined } from "./inputs.js"
 
@@ -15,8 +13,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 
 export default function FormReact() {
-
-
 
     let [userName, setUserName] = useState('');
     let [password, setPasword] = useState('');
@@ -36,22 +32,11 @@ export default function FormReact() {
 
         const response = await callServerLogin(userName ,password )
 
-
-        const messageServer64 = response.headers.get("message")
-
-        const messageServer   = Base64.decode(messageServer64)
-     
-        sVoice.Speaker(messageServer)
+        const messageServer = response.HGet64Speak("message")
    
+        response.HGetToStorage("token")
 
-        const token = response.headers.get("token")
-        if (token !==  "") {
-
-            localStorage.setItem('token', token);
-
-        }
-
-        const status = responseFormApp(response.status)
+        const status = responseFormApp(response.HGetStatus())
 
         const className = "text".concat( " " , status)
    
@@ -86,9 +71,6 @@ export default function FormReact() {
             rel='external'
             target='_top' >
    
-            <Voicer 
-            element="header" 
-            voicerText="Inscripción en Tiuvi" />
 
 
 
@@ -124,7 +106,6 @@ export default function FormReact() {
                  type={showPassword}
                  autocomplete="new-password"
                
-               
                     endAdornment={ <InputAdornment position="end">
                       <IconButton
                       color={showPassword === "password" ?  "buttonInactive": "buttonActive"}
@@ -137,8 +118,6 @@ export default function FormReact() {
                     </InputAdornment>
                   }
                   
-
-
                  placeholder="Contraseña"
                  inputProps={{'data-voice': "Introduce una contraseña"}}
                  onChange={  (event) => setPasword(event.target.value)}
@@ -147,17 +126,19 @@ export default function FormReact() {
             />
             {status}
            
-            <Voicer
-                element="button"
-                ref={ref3}
-                onClick={send_form} voicerText="Acceder Ahora" />
-
+      
         </form>
 
        </>
     );
 
+/* Boton
+      <Voicer
+                element="button"
+                ref={ref3}
+                onClick={send_form} voicerText="Acceder Ahora" />
 
+*/
 
 }
 

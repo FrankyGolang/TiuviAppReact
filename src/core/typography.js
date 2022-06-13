@@ -1,20 +1,15 @@
 'use-strict'
 
-//import { Mark, Em, U, A } from './core/typography.js'
-
-//Contexto
-import React, { useContext } from 'react';
-
 //Tipografia y fuentes
 import Typography from '@mui/material/Typography';
 import "typeface-libre-franklin";
 
 //Tema basico y tema ocuro y claro dinamico.
-import { CTheme, BasicTheme } from './theme.js'
-import { GlobalContext } from './options.js'
+import { cTheme, basicTheme } from './theme.js'
+import { useGlobalContext } from './options.js'
 
 //Lector de textos
-import { Reader } from './sVoice.js'
+import { reader } from './sVoice.js'
 
 
 
@@ -26,20 +21,20 @@ export function styleTitle(FW, newAtr) {
         fontSize: "35px",
         lineHeight: 1.2,
         letterSpacing: "-0.00833em",
-
-        [BasicTheme.breakpoints.up('xs')]: {
+        cursor: "pointer",
+        [basicTheme.breakpoints.up('xs')]: {
             fontSize: "6.5vw",
         },//600
-        [BasicTheme.breakpoints.up('sm')]: {
+        [basicTheme.breakpoints.up('sm')]: {
             fontSize: "4.5vw",
         },//900
-        [BasicTheme.breakpoints.up('md')]: {
+        [basicTheme.breakpoints.up('md')]: {
             fontSize: "4vw",
         },//1200
-        [BasicTheme.breakpoints.up('lg')]: {
+        [basicTheme.breakpoints.up('lg')]: {
             fontSize: "3vw",
         },//1536
-        [BasicTheme.breakpoints.up('xl')]: {
+        [basicTheme.breakpoints.up('xl')]: {
             fontSize: "35px",
         },
     }
@@ -64,19 +59,20 @@ export function styleText(FW, newAtr) {
         fontSize: "25px",
         lineHeight: 1.2,
         letterSpacing: "-0.00833em",
-        [BasicTheme.breakpoints.up('xs')]: {
+        cursor: "pointer",
+        [basicTheme.breakpoints.up('xs')]: {
             fontSize: "5.5vw",
         },//600
-        [BasicTheme.breakpoints.up('sm')]: {
+        [basicTheme.breakpoints.up('sm')]: {
             fontSize: "3.5vw",
         },//900
-        [BasicTheme.breakpoints.up('md')]: {
+        [basicTheme.breakpoints.up('md')]: {
             fontSize: "3vw",
         },//1200
-        [BasicTheme.breakpoints.up('lg')]: {
+        [basicTheme.breakpoints.up('lg')]: {
             fontSize: "2.5vw",
         },//1536
-        [BasicTheme.breakpoints.up('xl')]: {
+        [basicTheme.breakpoints.up('xl')]: {
             fontSize: "25px",
         },
     }
@@ -97,21 +93,21 @@ export function styleText(FW, newAtr) {
 //Creacion de nuevas tipografias.
 function NewTypography(tag, style) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
     
 
-    CTheme[Global.mode].components.MuiTypography.variants ??= []
+    cTheme[globalContext.mode].components.MuiTypography.variants ??= []
 
-    const found = CTheme[Global.mode].components.MuiTypography.variants.find(element => element.props.variant === tag);
+    const found = cTheme[globalContext.mode].components.MuiTypography.variants.find(element => element.props.variant === tag);
 
     if (found === undefined) {
 
-        CTheme[Global.mode].components.MuiTypography.variants.push({
+        cTheme[globalContext.mode].components.MuiTypography.variants.push({
             props: { variant: tag },
             style: styleText(400, style),
         });
 
-        CTheme[Global.mode].components.MuiTypography.defaultProps.variantMapping[tag] = tag
+        cTheme[globalContext.mode].components.MuiTypography.defaultProps.variantMapping[tag] = tag
 
     }
 
@@ -122,7 +118,7 @@ function NewTypography(tag, style) {
 
 export function Mark(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
 
 
@@ -133,8 +129,8 @@ export function Mark(props) {
         { name: "&:hover", value: { backgroundColor: "cornflowerblue", } },
         { name: "&:focus", value: { backgroundColor: "cornflowerblue", } },
         {
-            name: "transition", value: `${CTheme[Global.mode].transitions.create('background-color', {
-                duration: CTheme[Global.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('background-color', {
+                duration: cTheme[globalContext.mode].transitions.duration.long,
             })}`
         },
     ])
@@ -145,7 +141,7 @@ export function Mark(props) {
         <Typography 
         variant="mark"
         tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
 
     )
@@ -154,7 +150,7 @@ export function Mark(props) {
 
 export function Em(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     NewTypography( "em", [
         { name: "backgroundColor", value: "lawngreen" },
@@ -164,8 +160,8 @@ export function Em(props) {
         { name: "&:hover", value: { backgroundColor: "seagreen", } },
         { name: "&:focus", value: { backgroundColor: "seagreen", } },
         {
-            name: "transition", value: `${CTheme[Global.mode].transitions.create('background-color', {
-                duration: CTheme[Global.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('background-color', {
+                duration: cTheme[globalContext.mode].transitions.duration.long,
             })}`
         },
     ])
@@ -175,7 +171,7 @@ export function Em(props) {
         <Typography 
         variant="em"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
 
     )
@@ -184,7 +180,7 @@ export function Em(props) {
 
 export function U(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     NewTypography( "u", [
         { name: "backgroundColor", value: "orange" },
@@ -195,8 +191,8 @@ export function U(props) {
         { name: "&:hover", value: { backgroundColor: "darkorange", } },
         { name: "&:focus", value: { backgroundColor: "darkorange", } },
         {
-            name: "transition", value: `${CTheme[Global.mode].transitions.create('background-color', {
-                duration: CTheme[Global.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('background-color', {
+                duration: cTheme[globalContext.mode].transitions.duration.long,
             })}`
         },
     ])
@@ -206,7 +202,7 @@ export function U(props) {
         <Typography 
         variant="u"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
 
 
@@ -216,7 +212,7 @@ export function U(props) {
 
 export function A(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     NewTypography( "a", [
         { name: "borderRadius", value: "5px" },
@@ -225,8 +221,8 @@ export function A(props) {
         { name: "textDecoration", value: "underline" },
         { name: "&:hover", value: { "color": "skyblue", } },
         {
-            name: "transition", value: `${CTheme[Global.mode].transitions.create('color', {
-                duration: CTheme[Global.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('color', {
+                duration: cTheme[globalContext.mode].transitions.duration.long,
             })}`
         },
     ])
@@ -235,7 +231,7 @@ export function A(props) {
         <Typography 
         variant="a"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
 
     )
@@ -245,65 +241,65 @@ export function A(props) {
 
 export function H1(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="h1"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function H2(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="h2"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function H3(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="h3"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function H4(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="h4"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function H5(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="h5"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
@@ -311,104 +307,130 @@ export function H5(props) {
 
 export function H6(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="h6"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function Header1(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="subtitle1"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function Header2(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="subtitle2"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function P1(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="body1"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function P2(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="body2"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
+export function PList(props) {
+
+    const globalContext = useGlobalContext();
+
+    NewTypography( "p", [
+        { name: "borderRadius", value: "5px" },
+        { name: "color", value: props.color },
+        { name: "cursor", value: "pointer" },
+        {
+            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('color', {
+                duration: cTheme[globalContext.mode].transitions.duration.long,
+            })}`
+        },
+    ])
+
+    return (
+        <Typography 
+        variant="p"
+         tabIndex={0}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
+        >{props.children}</Typography>
+
+    )
+
+}
+
 export function B(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="button"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function Caption(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="caption"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }
 
 export function Overline(props) {
 
-    const Global = useContext(GlobalContext);
+    const globalContext = useGlobalContext();
 
     return (
         <Typography 
         variant="overline"
          tabIndex={0}
-        {...(Global.Voice === "on" && { onFocus: Reader ,onClick: Reader })}
+        {...(globalContext.voice === "on" && { onFocus: reader ,onClick: reader })}
         >{props.children}</Typography>
     )
 }

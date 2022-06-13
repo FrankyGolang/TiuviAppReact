@@ -1,158 +1,85 @@
 'use-strict'
-import FormReact from './core/FormReact.js';
-
-//Contexto Global
-import IconButton from '@mui/material/IconButton';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-
-
-import HearingIcon from '@mui/icons-material/Hearing';
-import HearingDisabledIcon from '@mui/icons-material/HearingDisabled';
-
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
-
-//App component imports
-import { CTheme } from './core/theme.js'
+import React, { useState } from 'react';
+//App contexto, tema y css
+import { cTheme } from './core/theme.js'
 import { ThemeProvider } from '@mui/material/styles';
-
-import { GlobalContext , Global} from './core/options.js'
-
-import React, { useContext , useState } from 'react';
+import { GlobalContext , global} from './core/options.js'
 import CssBaseline from '@mui/material/CssBaseline';
 
-import Box from '@mui/material/Box';
+import SelectPanel from './core/selectpanel.js'
 
-
-//Tipografias
-import { Mark, Em, U, A } from './core/typography.js'
-
-
+//Proximamente login
+import FormReact from './core/FormReact.js';
 
 
 
 
 
 
-function ToggleButton(props){
-
-  const Global = useContext(GlobalContext);
-
-
-  return(
-    <IconButton sx={{ ml: 1 }}  
-    color={Global.toggleTheme === "on" ?  "buttonActive": "buttonActive"} 
-    onClick={Global.toggleTheme}>
-    {Global.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-  </IconButton>
-  )
-}
-
-function ToggleButtonVoicer(props){
-
-  const Global = useContext(GlobalContext);
-
-
-  return(
-    <IconButton sx={{ ml: 1 }}  
-    color={Global.Voice === "on" ?  "buttonActive": "buttonInactive"} 
-    onClick={Global.toggleVoice}>
-      {Global.Voice === "on" ? <HearingIcon /> : <HearingDisabledIcon />}
-  </IconButton>
-  )
-}
-
-function ToggleButtonRecognition (props){
-
-  const Global = useContext(GlobalContext);
-
-  return(
-    <IconButton sx={{ ml: 1 }}  
-    color={Global.recognition === "on" ?  "buttonActive": "buttonInactive"}
-    onClick={Global.toggleRecognition}>
-      {Global.recognition === "on" ? <MicIcon /> : <MicOffIcon />}
-  </IconButton>
-  )
-}
 
 export default function App() {
 
 
-  const [mode, setMode] = useState(Global.mode);
-  Global.toggleTheme = () => {
+
+  const [mode, setMode] = useState(global.mode);
+  global.toggleTheme = () => {
 
     setMode(() => {
 
-      Global.mode = Global.mode === "light" ? "dark" : "light"
-      localStorage.setItem('themeMode', Global.mode);
-      return Global.mode
+      global.mode = global.mode === "light" ? "dark" : "light"
+      localStorage.setItem('themeMode', global.mode);
+      return global.mode
     })
   }
 
-  const [Voice, setVoice] = useState(Global.Voice);
-  Global.toggleVoice = () => {
+  const [Voice, setVoice] = useState(global.voice);
+  global.toggleVoice = () => {
 
     setVoice(() => {
 
-      Global.Voice = Global.Voice === "on" ? "off" : "on"
-      localStorage.setItem('Voice', Global.Voice);
-      return Global.Voice
+      global.voice = global.voice === "on" ? "off" : "on"
+      localStorage.setItem('Voice', global.voice);
+      return global.voice
     })
   }
   
-  const [recognition, setRecognition] = useState(Global.recognition);
-  Global.toggleRecognition = () => {
+  const [recognition, setRecognition] = useState(global.recognition);
+  global.toggleRecognition = () => {
 
     setRecognition(() => {
 
-      Global.recognition = Global.recognition === "on" ? "off" : "on"
-      localStorage.setItem('recognition', Global.recognition);
-      return Global.recognition
+      global.recognition = global.recognition === "on" ? "off" : "on"
+      localStorage.setItem('recognition', global.recognition);
+      return global.recognition
     })
   }
 
-  
+
+  const [navValue, setNavigation] = React.useState(global.navigation);
+  global.selectNavigation = (event, newValue)  => {
+
+    global.navigation = newValue
+    localStorage.setItem('navigation', newValue);
+    setNavigation(newValue)
+  }
+
+  const [menu, setMenu] = React.useState(global.menu);
+  global.selectMenu = (event, newValue)  => {
+    console.log(event)
+    console.log(newValue)
+    global.menu = newValue
+    localStorage.setItem('menu', newValue);
+    setMenu(newValue)
+  }
 
   return (
 
-<GlobalContext.Provider value={Global}>
-
-    <ThemeProvider theme={CTheme[Global.mode]}>
+<GlobalContext.Provider value={global}>
+    <ThemeProvider theme={cTheme[global.mode]}>
       <CssBaseline  enableColorScheme />
 
-
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: 'background.default',
-            color: 'text.primary',
-        
-
-          }}
-        >
-
-          <ToggleButton />
-          <ToggleButtonVoicer/>
-          <ToggleButtonRecognition/>
-
-          <Mark >Provando nuevo mark</Mark>
-          <Em >Provando nuevo Em</Em>
-          <U  >Provando nuevo U</U>
-          <A >Provando nuevo U</A>
-
-
-          <FormReact />
-
-        </Box>
-
-
-    
+      <SelectPanel />
+     
     </ThemeProvider>
     </GlobalContext.Provider>
 

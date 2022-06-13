@@ -1,8 +1,6 @@
 'use-strict'
 import callServer from './callServer.js';
-import { sVoice ,Voicer, Reader } from './sVoice.js';
-import React, { createContext } from 'react';
-
+import React, { createContext ,useContext} from 'react';
 
 
 /**
@@ -24,73 +22,97 @@ const securUrl  =   (`https://` + url);
 
 //Migrar localStorage a otro fichero
 let themeMode = localStorage.getItem('themeMode');
-if (themeMode === null) {
+if (themeMode === null || themeMode === undefined) {
 
     themeMode = "light"
     localStorage.setItem('themeMode', 'light');
 
 }
 
-let Voice = localStorage.getItem('Voice');
-if (Voice === null) {
+let voice = localStorage.getItem('Voice');
+if (voice === null || voice === undefined) {
 
-    Voice = "on"
-    localStorage.setItem('Voice', 'on');
+    voice = "on"
+    localStorage.setItem('voice', 'on');
 
 }
 
 let recognition = localStorage.getItem('recognition');
-if (recognition === null) {
+if (recognition === null || recognition === undefined) {
 
     recognition = "on"
     localStorage.setItem('recognition', 'on');
 
 }
 
+let navigation = localStorage.getItem('navigation');
+if (navigation === null || navigation === undefined) {
 
+    navigation = "3"
+    localStorage.setItem('navigation', '3');
+
+}
+ 
+let menu = localStorage.getItem('menu');
+if (menu === null || menu === undefined) {
+
+    menu = "main"
+    localStorage.setItem('menu', 'main');
+
+}
 
 
 
 //Contexto para javascript
-export const Global = {
-    SecureUrl:  (`https://` + url),
-    SoundConfirmation: (securUrl + "/mp3/soundConfirmation.mp3"),
-    SoundError: (securUrl + "/mp3/soundError.mp3"),
-    DefaultView: (`https://` + viewNow) ,
-    LastRoute: endRoute,
-    NameUser:  nameUser,
+export const global = {
+    secureUrl:  (`https://` + url),
+    soundConfirmation: (securUrl + "/mp3/soundConfirmation.mp3"),
+    soundError: (securUrl + "/mp3/soundError.mp3"),
+    defaultView: (`https://` + viewNow) ,
+    lastRoute: endRoute,
+    nameUser:  nameUser,
 
-    SecureEndpoint: (securUrl + "/app/"),
-    UserLogin: (securUrl + "/app/login"),
-    UserReferer: (securUrl + "/app/referer"),
-    UserView:(securUrl + "/app/view"),
+    secureEndpoint: (securUrl + "/app/"),
+    userLogin: (securUrl + "/app/login"),
+    userReferer: (securUrl + "/app/referer"),
+    userView:(securUrl + "/app/view"),
 
     mode: themeMode,
     toggleTheme: () => { },
 
-    Voice: Voice,
+    voice: voice,
     toggleVoice: () => { },
 
     recognition: recognition,
     toggleRecognition: () => { },
     
+    navigation: navigation,
+    selectNavigation: () => { },
+
+    menu: menu,
+    selectMenu: () => { },
+
 };
 
 //Contexto para react
-export const GlobalContext = createContext(Global);
+export const GlobalContext = createContext(global);
+export function useGlobalContext(){
 
+    return useContext(GlobalContext)
+
+}
 
 export function callServerLogin(UserName , Password){
 
-    const loginUser = new callServer(Global.UserLogin)
+    const loginUser = new callServer(global.userLogin)
     loginUser.Method("HEAD")
     loginUser.Mode("cors")
     loginUser.Cache("no-cache")
     loginUser.Credentials("omit")
     loginUser.Headers("username", UserName)
-    loginUser.Headers("Password", Password)
+    loginUser.Headers("password", Password)
     loginUser.Redirect("error")
-    loginUser.Referrer(Global.NameUser)
+    loginUser.Referrer(global.nameUser)
     loginUser.ReferrerPolicy("strict-origin-when-cross-origin")
 
     return  loginUser.GoCall()
@@ -107,14 +129,14 @@ function callAudio(Url){
     AudioForm.Credentials("omit")
     AudioForm.Headers("range", "bytes=0")
     AudioForm.Redirect("follow")
-    AudioForm.Referrer(Global.NameUser)
+    AudioForm.Referrer(global.nameUser)
     AudioForm.ReferrerPolicy("strict-origin-when-cross-origin")
 
     return  AudioForm.GoCall()
 }
 async function playAudio(url){
 
-    const responseAudio = await callAudio(url)
+    const responseAudio = (await callAudio(url)).response
     const audioBuffer = await responseAudio.arrayBuffer()
     const ctx         = new AudioContext();
 
@@ -128,20 +150,16 @@ async function playAudio(url){
 export function responseFormApp(responseStatus){
 
     if(responseStatus === 200){
-        playAudio(Global.SoundConfirmation)
+        playAudio(global.soundConfirmation)
         return "success"
          
     } 
 
     if(responseStatus === 400){
     
-        playAudio(Global.SoundError)  
+        playAudio(global.soundError)  
         return "error"   
     }
 
 }
 
-
-
-//Exportaciones de otros scripts
-export {sVoice, Voicer, Reader}

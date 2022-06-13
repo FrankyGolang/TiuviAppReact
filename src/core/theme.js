@@ -6,7 +6,7 @@ import { styleTitle, styleText } from './typography.js'
 
 
 
-const Themer = (mode) => ({
+const themer = (mode) => ({
 
     typography: {
 
@@ -29,6 +29,52 @@ const Themer = (mode) => ({
         overline: styleText(400),
     },
 
+    palette: {
+        mode,
+
+        text: {
+            ...(mode === 'light' ? {
+                primary: grey[900],
+                //Hover
+                secondary: "rgb(100,149,237)",
+            } : {
+                //dark
+                primary: blueGrey[100],
+                //Hover
+                secondary: "rgb(0,191,255)",
+            }),
+        },
+        
+        
+        buttonInactive: {
+            ...(mode === 'light' ? {
+                main: "rgba(0, 0, 0, 0.6)",
+            } : {
+                //dark
+                main: blueGrey[400],
+            }),
+        },
+        buttonActive: {
+            ...(mode === 'light' ? {
+                main: "rgb(100,149,237)",
+            } : {
+                //dark
+                main: "rgb(0,191,255)",
+            }),
+        },
+
+        borderColor: {
+            ...(mode === 'light' ? {
+                main: grey[900],
+            } : {
+                //dark
+                main: blueGrey[100],
+            }),
+        },
+    
+
+    },//endPalette
+
     components: {
         MuiTypography: {
             //variants: [],
@@ -41,40 +87,45 @@ const Themer = (mode) => ({
                 },
             },
         },
-    },
-    palette: {
-        mode,
 
-        text: {
-            ...(mode === 'light' ? {
-                primary: grey[900],
-                //Hover
-                secondary: "mediumblue",
-            } : {
-                //dark
-                primary: blueGrey[100],
-                //Hover
-                secondary: "deepskyblue",
-            }),
-        },
-        
-        buttonInactive: {
-            ...(mode === 'light' ? {
-                main: "rgba(0, 0, 0, 0.54)",
-            } : {
-                //dark
-                main: blueGrey[100],
-            }),
-        },
-        buttonActive: {
-            ...(mode === 'light' ? {
-                main: "rgb(100,149,237)",
-            } : {
-                //dark
-                main: blueGrey[400],
-            }),
-        },
+        MuiBottomNavigationAction: {
+            variants: [
+                {
+                    props: { variant: 'main' },
+                       style: {
+                                ...(mode === 'light' ? {
+                                    color: grey[400],
+                                } : {
+                                    //dark
+                                    color: blueGrey[400],
+                                }),
+                                
+                                '&.MuiBottomNavigationAction-root.Mui-selected': {
+                                    ...(mode === 'light' ? {
+                                        color: grey[900],
+                                    } : {
+                                        //dark
+                                        color: "rgb(0,191,255)",
+                                    }),
+                                },
+
+                                '	.MuiBottomNavigationAction-label':{
+                                    ...(mode === 'light' ? {
+                                        color: grey[900],
+                                    } : {
+                                        //dark
+                                        color: blueGrey[100],
+                                    }),
+                                    fontWeight: 'bold',
+                                }
+                       }
+                }],
+                
+        }, 
     },
+
+
+
 
     transitions: {
         duration: {
@@ -109,10 +160,10 @@ const Themer = (mode) => ({
 });
 
 
-export const BasicTheme = createTheme()
+export const basicTheme = createTheme()
 
 
-export const CTheme = {
-    light: createTheme(Themer("light")),
-    dark: createTheme(Themer("dark")),
+export const cTheme = {
+    light: createTheme(themer("light")),
+    dark: createTheme(themer("dark")),
 }

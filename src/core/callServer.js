@@ -1,5 +1,6 @@
 'use-strict'
-
+import {Base64} from 'js-base64';
+import { sVoice } from './sVoice.js';
 
 export default class callServer {
 
@@ -278,9 +279,73 @@ export default class callServer {
 
     }
 
-    GoCall(){
-        return fetch(this.urlFeth, this.init)
+    async GoCall(){
+
+        this.response = await fetch(this.urlFeth, this.init)
+        
+         return this
     }
+
+
+
+
+    //A partir de aqui funciones de respuesta
+    HGet64Speak(name){
+
+        //Refactorizar esto en una funcion.
+        const messageServer64 = this.response.headers.get(name)
+        if (messageServer64 !==  "") {
+
+            const messageServer = Base64.decode(messageServer64)
+            
+            sVoice.Speaker(messageServer)
+
+            return messageServer
+        }
+
+       return ""
+    }
+    
+    HGet64(name){
+
+        //Refactorizar esto en una funcion.
+        const messageServer64 = this.response.headers.get(name)
+        if (messageServer64 !==  "") {
+
+            const messageServer = Base64.decode(messageServer64)
+            
+            return messageServer
+        }
+
+       return ""
+    }
+
+    HGetToStorage(name){
+
+        const messageServer = this.response.headers.get(name)
+        if (messageServer !==  "") {
+
+            localStorage.setItem(name, messageServer);
+
+        }
+    }
+
+    HGet64ToStorage(name){
+
+        const messageServer64 = this.response.headers.get(name)
+        if (messageServer64 !==  "") {
+  
+            const messageServer = Base64.decode(messageServer64)
+            
+            localStorage.setItem(name, messageServer);
+
+        }
+    }
+
+    HGetStatus(){
+        return this.response.status
+    }
+
 }
 
 

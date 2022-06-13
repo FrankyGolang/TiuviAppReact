@@ -1,3 +1,10 @@
+//React Component imports
+import React, { useState } from 'react';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import MicIcon from '@mui/icons-material/Mic';
+
+
 let recognition  = undefined
 let error        = undefined
 const messages   = []
@@ -11,7 +18,7 @@ try {
     recognition = new window.webkitSpeechRecognition() || new window.SpeechRecognition();
 
   } catch (errorApi) {
-   
+    console.log(errorApi)
     error = errorApi
   }
 
@@ -228,3 +235,39 @@ if (recognition !== undefined){
 
 
 
+//Componente React
+export function Recognition(props){
+
+    const [recording, setColor] = useState("buttonInactive");
+
+    async function Recognition() {
+
+        const startRecognition = await sListener.Recogniter()
+        setColor("buttonActive")
+        if (startRecognition) {
+    
+            while (sListener.Starter()) {
+    
+                if (!sListener.Starter()){
+                    await new Promise(r => setTimeout(r, 250));
+                }
+
+                const results = await sListener.Results()
+
+                if(results.length > 0){
+                    props.update((prevState) => prevState + results[0])
+                    results.shift()
+                }
+            }
+        }
+        setColor("buttonInactive")
+    }
+
+    return(
+        <InputAdornment position="end">
+        <IconButton color={recording} onClick={Recognition} aria-label="recognition" edge="end">
+            <MicIcon />
+        </IconButton>
+    </InputAdornment>
+    )
+}

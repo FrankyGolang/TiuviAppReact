@@ -1,38 +1,73 @@
+'use-strict'
+let error            = undefined
+let speechSynthesis  = undefined
+let utterance        = undefined
+let lang             = undefined
+let voices           = undefined
+let name             = undefined
 
-if (speechSynthesis.speaking === true){
+try {
+    
+    speechSynthesis = window.speechSynthesis
 
-    speechSynthesis.cancel()
+  } catch (errorApi) {
+   console.log(errorApi)
+    error = errorApi
+  }
 
-}
+ 
 
-const utterance = new SpeechSynthesisUtterance();
-utterance.volume = 100
-utterance.pitch = 0.9
-utterance.rate = 0.9
-utterance.text = ""
-let lang = "es-ES" , name = "Google español"
-let voices = speechSynthesis.getVoices();
+if (speechSynthesis !== undefined){
 
-if (voices.length > 0) {
+    if (speechSynthesis.speaking === true){
 
-    utterance.voice = voices.find(voices => voices.lang === lang || voices.name === name)
+        speechSynthesis.cancel()
+    
+    }
 
-}
+    
+    try {
+    
+        utterance = new SpeechSynthesisUtterance();
+    
+      } catch (errorApi) {
+        console.log(errorApi)
+        error = errorApi
+      }
 
+    utterance.volume = 100
+    utterance.pitch = 0.9
+    utterance.rate = 0.9
+    utterance.text = ""
+    lang = "es-ES"
+    name = "Google español"
+    voices = speechSynthesis.getVoices();
+    
+    if (voices.length > 0) {
+    
+        utterance.voice = voices.find(voices => voices.lang === lang || voices.name === name)
+    
+    }
+    
     //pass by async
     if (voices.length === 0) {
-
+    
         //Tiempo asincrono 
         speechSynthesis.onvoiceschanged = () => {
-
+    
             voices = speechSynthesis.getVoices();
-       
+        
             utterance.voice = voices.find(voices => voices.lang === lang || voices.name === name)
         
             sVoice.Voices = voices
-           
+            
         }
     }
+
+}
+
+
+
 
 //Cache de mensajes, para no repetirlos
 let Messages = []
@@ -52,6 +87,7 @@ export const sVoice = {
     SetRate: (rate) => {
         utterance.rate = rate
     },
+
     Speaker : (message) => {
 
       
@@ -91,8 +127,7 @@ export const sVoice = {
 
 }
 
-export function Reader(event){
-    console.log(event)
+export function reader(event){
 
     if (event.target.innerText !== ""){
 
@@ -103,93 +138,3 @@ export function Reader(event){
     }
 }
 
-
-
-export function Voicer(props){
-    
-
-
-
-    //Propiedades comunes
-    let className = ""
-    props.id ??= "";
-    props.status ??= "";
-    props.voicerText ??= "";
-    props.className ??= "";
-
-    switch (props.element) {
-        case "p":
-        className = "text".concat( " ", props.className, " " , props.status)
-        return (
-            <props.element 
-                id={props.id}
-                onClick={Reader}
-                className={className} >
-                    {props.voicerText}
-            </props.element>
-        )
-        case "h1": case "h2": case "h3": case "h4": case "h5": case "h6": case "header": 
-        className = "title".concat( " ", props.className, " " , props.status)
-        return (
-            <props.element 
-                id={props.id}
-                onClick={Reader}
-                className={className} >
-                    {props.voicerText}
-            </props.element>
-        )
-   
-        case "button":
-        className='title button'.concat( " ", props.className, " " , props.status)
-        return (
-            <props.element 
-                id={props.id}
-                onMouseEnter={Reader}
-                onFocus={Reader}
-                onClick={props.onClick}
-                className={className} >
-                    {props.voicerText}
-            </props.element>
-        )
-        case "input": 
-
-        props.name ??= "";
-        props.type ??= "";
-        props.defaultValue ??= "";
-        props.placeholder ??= "";
-        props.classLabel ??= "";
-
-        className='text camposform'.concat( " ", props.className, " " , props.status)
-        const classLabel = 'labelform text'.concat(" ", props.classLabel)
-         
- 
-        return (
-            <>
-                <label 
-                htmlFor={props.id} 
-                className={classLabel}
-                onClick={Reader}
-                >{props.textLabel}</label>
-
-                <props.element 
-                id={props.id}
-                className={className}
-                name={props.name}
-                type={props.type}
-                autocomplete={props.autocomplete}
-                defaultValue={props.defaultValue}
-                placeholder={props.placeholder}
-                    aria-label={props.voicerText}
-                    onFocus={Reader}
-                    onClick={Reader}
-                    onInput={props.onInput}
-                    onKeyPress={props.onKeyPress}
-                />
-           </>
-        )
-    }
-
-
-
-
-}
