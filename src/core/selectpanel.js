@@ -1,21 +1,21 @@
 'use-strict'
 
 import { useGlobalContext } from './options.js'
+import { panels } from './app/arraypanels.js'
 
-import  MainPanel  from './app/main/mainpanel.js'
-import MensajeriaPanel  from './app/mensajeria/mensajeria.js'
 
-export default function SelectPanel(props){
+export default function SelectPanel(props) {
 
     const globalContext = useGlobalContext();
+    let SpecificMenu = {}
+    if(panels.hasOwnProperty(globalContext.menu)){
 
-    switch (globalContext.menu) {
+        SpecificMenu = panels[globalContext.menu].panel;
+    } else {
 
-        case 'mensajeria':
-             return (<MensajeriaPanel />)
-    
-        default:
-            return(<MainPanel />)
-      
+        SpecificMenu = panels['main'].panel;
     }
-}
+    
+
+    return <SpecificMenu  />;
+  }

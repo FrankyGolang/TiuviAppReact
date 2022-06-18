@@ -38,7 +38,7 @@ export default function App() {
     setVoice(() => {
 
       global.voice = global.voice === "on" ? "off" : "on"
-      localStorage.setItem('Voice', global.voice);
+      localStorage.setItem('voice', global.voice);
       return global.voice
     })
   }
@@ -55,6 +55,22 @@ export default function App() {
   }
 
 
+  const [menu, setMenu] = React.useState(global.menu);
+  global.selectMenu = (event, newValue)  => {
+    global.menu = newValue
+    localStorage.setItem('menu', newValue);
+    setMenu(newValue)
+  }
+
+  //Añadir select menus a navigation
+  const [menusActive , selectMenus] = React.useState(global.menusActive);
+  global.selectMenusActive = (event, newValue)  => {
+
+
+
+  }
+
+
   const [navValue, setNavigation] = React.useState(global.navigation);
   global.selectNavigation = (event, newValue)  => {
 
@@ -63,14 +79,10 @@ export default function App() {
     setNavigation(newValue)
   }
 
-  const [menu, setMenu] = React.useState(global.menu);
-  global.selectMenu = (event, newValue)  => {
-    console.log(event)
-    console.log(newValue)
-    global.menu = newValue
-    localStorage.setItem('menu', newValue);
-    setMenu(newValue)
-  }
+
+
+
+
 
   return (
 

@@ -29,7 +29,7 @@ if (themeMode === null || themeMode === undefined) {
 
 }
 
-let voice = localStorage.getItem('Voice');
+let voice = localStorage.getItem('voice');
 if (voice === null || voice === undefined) {
 
     voice = "on"
@@ -62,6 +62,24 @@ if (menu === null || menu === undefined) {
 }
 
 
+let menusActive = localStorage.getItem('menusActive');
+if (menusActive === null || menusActive === undefined) {
+
+    menusActive = {
+        main: true,
+        mensajeria: true, 
+        imagen:true, 
+        video:true,
+      //  musica:true 
+    }
+    
+    const menusActiveJson = JSON.stringify(menusActive);
+    localStorage.setItem('menusActive', menusActiveJson  );
+
+}
+
+
+
 
 //Contexto para javascript
 export const global = {
@@ -92,6 +110,8 @@ export const global = {
     menu: menu,
     selectMenu: () => { },
 
+    menusActive: menusActive,
+    selectMenusActive: () => { },
 };
 
 //Contexto para react

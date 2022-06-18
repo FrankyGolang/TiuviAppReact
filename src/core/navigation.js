@@ -25,10 +25,10 @@ import Switch from '@mui/material/Switch';
 import { PList } from './typography.js'
 
 //Test navegacion
-import ListItemButton from '@mui/material/ListItemButton';
-import HomeTwoToneIcon from '@mui/icons-material/HomeTwoTone';
-import EmailIcon from '@mui/icons-material/Email';
+import { panels , panelsInactive } from './app/arraypanels.js'
 
+//SelectAllMenu
+import AppRegistrationTwoToneIcon from '@mui/icons-material/AppRegistrationTwoTone';
 
 function ToggleButtonTheme(props){
 
@@ -113,10 +113,50 @@ function ToggleButtonTheme(props){
     )
   }
 
+  function SelectAllMenus(props){
 
-export default function Navigation(props){
+    const globalContext = useGlobalContext();
+  
+    return(
+          <ListItem onClick={(event) => globalContext.selectNavigation(event, 'selectMenus')}>
+              <ListItemIcon>
+                <IconButton sx={{ ml: 1 }}  
+                  color="buttonInactive">
+                  <AppRegistrationTwoToneIcon fontSize='large' />
+                </IconButton>
+              </ListItemIcon>
+            <ListItemText id="switch-list-label-toggleRecognition" 
+            primary={<PList>Elije tus menus</PList>} />
+          </ListItem>
+    )
+  }
 
-  const globalContext = useGlobalContext();
+
+function ListPanels(props){
+
+  let arrayPanelList = []
+
+  for (let value in panels){
+
+    const SpecificMenuList = panels[value].panelList;
+
+    arrayPanelList.push(<SpecificMenuList key={value} />)
+
+  }
+
+  return (
+    <List 
+    component="nav" 
+    aria-label="main mailbox folders"
+    sx={{ width: '100%', bgcolor: 'background.paper' }}>
+   <SelectAllMenus />
+    {arrayPanelList}
+
+    </List>)
+}
+
+//Hacer boton para ir a la seleccion de menus.
+export function Navigation(){
 
     return(
       <>
@@ -126,35 +166,57 @@ export default function Navigation(props){
         <ToggleButtonTheme />
         <ToggleButtonVoicer/>
         <ToggleButtonRecognition/>
-
+     
       </List>
 
-      <List 
-      component="nav" 
-      aria-label="main mailbox folders"
-      sx={{ width: '100%', bgcolor: 'background.paper' }}>
-
-        <ListItemButton
-          selected={globalContext.menu === 'main'}
-          onClick={(event) => globalContext.selectMenu(event, 'main')}
-        >
-          <ListItemIcon>
-                    <HomeTwoToneIcon fontSize='large' />
-            </ListItemIcon>
-            <ListItemText primary="Paginas Principales" />
-
-        </ListItemButton>
-
-        <ListItemButton
-          selected={globalContext.menu === 'mensajeria'}
-          onClick={(event) => globalContext.selectMenu(event, 'mensajeria')}
-        >
-          <ListItemIcon>
-            <EmailIcon fontSize='large'/>
-          </ListItemIcon>
-          <ListItemText primary="Mensajeria" />
-        </ListItemButton>
-
-      </List>
+        <ListPanels />
+      
+      
       </>)
   }
+
+export function SelectMenus(){
+
+  
+  let arrayPanelList = []
+  
+  for (let value in panels){
+  
+    const SpecificMenuList = panels[value].panelSelect;
+
+    arrayPanelList.push(<SpecificMenuList key={value} />)
+
+  }
+
+  let arrayPanelListInactive = []
+
+  for (let value in panelsInactive){
+
+    const SpecificMenuList = panelsInactive[value].panelSelect;
+
+    arrayPanelListInactive.push(<SpecificMenuList key={value} />)
+
+  }
+ 
+
+  return(
+    <>
+      <List 
+      sx={{ width: '100%', bgcolor: 'background.paper' }}>
+ 
+    <h1>Paneles Activos</h1>
+    {arrayPanelList}
+
+    <h1>Paneles Inactivos</h1>
+    {arrayPanelListInactive}
+
+    </List>
+
+    </>)
+}
+
+
+export const navigation = {
+  panel1: Navigation,
+  selectMenus: SelectMenus,
+};

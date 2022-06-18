@@ -10,29 +10,28 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 
 //icons
-import QueueMusicIcon from '@mui/icons-material/QueueMusic';
-import MusicVideoTwoToneIcon from '@mui/icons-material/MusicVideoTwoTone';
+import VideoLibraryTwoToneIcon from '@mui/icons-material/VideoLibraryTwoTone';
+import OndemandVideoTwoToneIcon from '@mui/icons-material/OndemandVideoTwoTone';
 import CloudDoneTwoToneIcon from '@mui/icons-material/CloudDoneTwoTone';
+
 
 function Title2(){
 
-    return (<H1 >Listas de musica</H1>)
+    return (<H1 >Listas de video</H1>)
 }
 
 function Title3(){
 
-    return (<H1 >Canciones</H1>)
+    return (<H1 >Videos</H1>)
 }
 
 function Title4(){
 
-    return (<H1 >Musica Offline</H1>)
+    return (<H1 >Video Offline</H1>)
 }
 
 
-
-
-function MusicaPanel(props){
+export  function VideoPanel(props){
 
 
     return(
@@ -44,16 +43,12 @@ function MusicaPanel(props){
             panel4: Title4,
         }}
 
-        panel2={ <H1 >Listas de musica</H1>}
         panel2Label="Listas"
-        panel2icon={<QueueMusicIcon fontSize='large' />}
+        panel2icon={<VideoLibraryTwoToneIcon fontSize='large' />}
 
-        panel3={<H1 >Canciones</H1>}
-        panel3Label="Canciones"
-        panel3icon={<MusicVideoTwoToneIcon fontSize='large' />}
+        panel3Label="Videos"
+        panel3icon={<OndemandVideoTwoToneIcon fontSize='large' />}
 
-   
-        panel4={<H1 >Musica Offline</H1>}
         panel4Label="offline"
         panel4icon={<CloudDoneTwoToneIcon fontSize='large' />}
 
@@ -61,22 +56,22 @@ function MusicaPanel(props){
     )
 }
 
-function MusicaPanelList(){
+export function VideoPanelList(){
     
     const globalContext = useGlobalContext();
     
     return(<ListItemButton
-        selected={globalContext.menu === 'musica'}
-        onClick={(event) => globalContext.selectMenu(event, 'musica')}
+        selected={globalContext.menu === 'video'}
+        onClick={(event) => globalContext.selectMenu(event, 'video')}
         >
         <ListItemIcon>
-          <MusicVideoTwoToneIcon fontSize='large'/>
+          <OndemandVideoTwoToneIcon fontSize='large'/>
         </ListItemIcon>
-        <ListItemText primary="Musica" />
+        <ListItemText primary="Video" />
         </ListItemButton>)
 }
 
-function MusicaPanelSelect(props){
+function VideoPanelSelect(props){
     
     const globalContext = useGlobalContext();
     
@@ -84,15 +79,16 @@ function MusicaPanelSelect(props){
         onClick={props.onClick}
         >
         <ListItemIcon>
-          <MusicVideoTwoToneIcon fontSize='large'/>
+          <OndemandVideoTwoToneIcon fontSize='large'/>
         </ListItemIcon>
-        <ListItemText primary="Musica" />
+        <ListItemText primary="Video" />
         </ListItemButton>)
 }
 
-export const panelMusica = {
-    name: 'musica',
-    panel: MusicaPanel,
-    panelList: MusicaPanelList,
-    panelSelect: MusicaPanelSelect,
+
+export const panelVideo = {
+    name: 'video',
+    panel: VideoPanel,
+    panelList: VideoPanelList,
+    panelSelect: VideoPanelSelect,
 };
