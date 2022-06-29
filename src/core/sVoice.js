@@ -34,6 +34,10 @@ if (speechSynthesis !== undefined){
         console.log(errorApi)
         error = errorApi
       }
+      
+      utterance.onerror = (event) => {
+        console.log(event)
+      }
 
     utterance.volume = 100
     utterance.pitch = 0.9

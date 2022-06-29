@@ -37,7 +37,7 @@ export function InputOutlined(props) {
                 }
             )}
             
-            onFocus={Global.Voice === "on" ? reader : undefined}
+            onFocus={Global.voice === "on" ? reader : undefined}
         />
     )
 }

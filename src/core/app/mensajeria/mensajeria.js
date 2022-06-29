@@ -105,9 +105,10 @@ function MensajeriaPanelSelect(props){
         </ListItemButton>)
 }
 
-export const panelMensajeria = {
+const panelMensajeria = {
     name: 'mensajeria',
     panel: MensajeriaPanel,
     panelList: MensajeriaPanelList,
     panelSelect: MensajeriaPanelSelect,
 };
+export default panelMensajeria;

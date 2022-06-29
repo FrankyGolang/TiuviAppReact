@@ -28,29 +28,31 @@ import { PList } from './typography.js'
 import { panels , panelsInactive } from './app/arraypanels.js'
 
 //SelectAllMenu
+import React, { useState } from 'react';
+import ListItemButton from '@mui/material/ListItemButton';
 import AppRegistrationTwoToneIcon from '@mui/icons-material/AppRegistrationTwoTone';
 
 function ToggleButtonTheme(props){
 
     const globalContext = useGlobalContext();
-  
-  
+    const modeTheme = globalContext.userOptions.modeTheme() === "light" ? true : false;
+
     return(
         <ListItem>
         <ListItemIcon>
             <IconButton sx={{ ml: 1 }}  
-          color={globalContext.mode === "light" ?  "buttonActive": "buttonInactive"} 
+          color={modeTheme ?  "buttonActive": "buttonInactive"} 
           >
-          {globalContext.mode === 'light' ? <Brightness7Icon /> : <Brightness4Icon />}
+          {modeTheme ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
         </ListItemIcon>
         <ListItemText 
         id="switch-list-label-toggleTheme" 
-        primary={<PList color={globalContext.mode === "light" ?  "buttonActive": "buttonInactive"}>toggleTheme</PList>} />
+        primary={<PList color={modeTheme ?  "buttonActive": "buttonInactive"}>toggleTheme</PList>} />
         <Switch
           edge="end"
           onChange={globalContext.toggleTheme}
-          checked={globalContext.mode === "light"}
+          checked={modeTheme}
           inputProps={{
             'aria-labelledby': 'switch-list-label-toggleTheme',
           }}
@@ -62,7 +64,8 @@ function ToggleButtonTheme(props){
  function ToggleButtonVoicer(props){
   
     const globalContext = useGlobalContext();
-  
+    const modeTheme = globalContext.userOptions.modeTheme() === "light" ? true : false;
+
   
     return(
       <ListItem>
@@ -74,7 +77,7 @@ function ToggleButtonTheme(props){
       </ListItemIcon>
       <ListItemText 
       id="switch-list-label-voice" 
-      primary={<PList color={globalContext.toggleTheme === "on" ?  "buttonActive": "buttonInactive"}>Voice</PList>} />
+      primary={<PList color={modeTheme ?  "buttonActive": "buttonInactive"}>Voice</PList>} />
       <Switch
         edge="end"
         onChange={globalContext.toggleVoice}
@@ -90,7 +93,8 @@ function ToggleButtonTheme(props){
   function ToggleButtonRecognition (props){
   
     const globalContext = useGlobalContext();
-  
+    const modeTheme = globalContext.userOptions.modeTheme() === "light" ? true : false;
+
     return(
           <ListItem>
           <ListItemIcon>
@@ -100,7 +104,7 @@ function ToggleButtonTheme(props){
           </IconButton>
           </ListItemIcon>
           <ListItemText id="switch-list-label-toggleRecognition" 
-          primary={<PList color={globalContext.toggleTheme === "on" ?  "buttonActive": "buttonInactive"}>toggle Recognition</PList>} />
+          primary={<PList color={modeTheme ?  "buttonActive": "buttonInactive"}>toggle Recognition</PList>} />
           <Switch
             edge="end"
             onChange={globalContext.toggleRecognition}
@@ -113,21 +117,20 @@ function ToggleButtonTheme(props){
     )
   }
 
+
   function SelectAllMenus(props){
 
     const globalContext = useGlobalContext();
   
     return(
-          <ListItem onClick={(event) => globalContext.selectNavigation(event, 'selectMenus')}>
-              <ListItemIcon>
-                <IconButton sx={{ ml: 1 }}  
-                  color="buttonInactive">
-                  <AppRegistrationTwoToneIcon fontSize='large' />
-                </IconButton>
-              </ListItemIcon>
-            <ListItemText id="switch-list-label-toggleRecognition" 
-            primary={<PList>Elije tus menus</PList>} />
-          </ListItem>
+    <ListItemButton
+      onClick={(event) => globalContext.selectNavigation(event, 'selectMenus')}
+      >
+        <ListItemIcon>
+          <AppRegistrationTwoToneIcon fontSize='large' />
+        </ListItemIcon>
+        <ListItemText primary="Elige tus menus" />
+      </ListItemButton>
     )
   }
 
@@ -175,28 +178,100 @@ export function Navigation(){
       </>)
   }
 
+
+
+
+
 export function SelectMenus(){
 
-  
-  let arrayPanelList = []
-  
-  for (let value in panels){
-  
-    const SpecificMenuList = panels[value].panelSelect;
+  const globalContext = useGlobalContext();
 
-    arrayPanelList.push(<SpecificMenuList key={value} />)
+  const [arrayPanelList, setMenuActive] = useState(<ActiveList />);
+
+  const [arrayPanelListInactive, setMenuInactive] = useState(<InactiveList />);
+
+
+  function offMenu (event, menu) {
+
+    if(globalContext.menusActive.length === 1){
+
+      return
+    }
+    
+    if(globalContext.menu === menu){
+      return
+    }
+
+    if (globalContext.menusActive.hasOwnProperty(menu)){
+
+      delete globalContext.menusActive[menu]
+
+      const menusActiveJson = JSON.stringify(globalContext.menusActive);
+      localStorage.setItem('menusActive', menusActiveJson);
+     
+      panelsInactive[menu] = panels[menu]
+      delete panels[menu]
+     
+      setMenuInactive(<InactiveList />)
+      setMenuActive(<ActiveList />)
+
+    }
 
   }
 
-  let arrayPanelListInactive = []
+  function onMenu (event, menu) {
 
-  for (let value in panelsInactive){
+    if (!globalContext.menusActive.hasOwnProperty(menu)){
 
-    const SpecificMenuList = panelsInactive[value].panelSelect;
+      globalContext.menusActive[menu] = true
 
-    arrayPanelListInactive.push(<SpecificMenuList key={value} />)
+      const menusActiveJson = JSON.stringify(globalContext.menusActive);
+      localStorage.setItem('menusActive', menusActiveJson);
+      
+      panels[menu] = panelsInactive[menu]
+      delete panelsInactive[menu]
+
+      setMenuInactive(<InactiveList />)
+      setMenuActive(<ActiveList />)
+
+
+    }
 
   }
+
+  function ActiveList(){
+
+    let arrayPanelList = []
+   
+    for (let value in panels){
+    
+      const SpecificMenuList = panels[value].panelSelect;
+  
+      arrayPanelList.push(<SpecificMenuList onClick={(event) => offMenu(event, value)} key={value} />)
+  
+    }
+  
+    return (<>
+    {arrayPanelList}
+    </>)
+  }
+  
+  function InactiveList(){
+  
+    let arrayPanelListInactive = []
+    for (let value in panelsInactive){
+  
+      const SpecificMenuList = panelsInactive[value].panelSelect;
+  
+      arrayPanelListInactive.push(<SpecificMenuList onClick={(event) => onMenu(event, value)} key={value} />)
+  
+    }
+  
+    return(<>{arrayPanelListInactive}</>)
+  }
+
+ 
+
  
 
   return(

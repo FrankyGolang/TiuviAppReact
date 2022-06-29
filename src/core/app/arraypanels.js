@@ -1,10 +1,11 @@
 'use-strict'
 
-import  { panelMain }  from './main/mainpanel.js'
-import { panelMensajeria }  from './mensajeria/mensajeria.js'
-import { panelMusica }  from './musica/musica.js'
-import { panelVideo }  from './video/video.js'
-import { panelImage }  from './imagen/imagen.js'
+import  panelMain   from './main/mainpanel.js'
+import  panelMensajeria   from './mensajeria/mensajeria.js'
+import  panelMusica   from './musica/musica.js'
+import  panelVideo   from './video/video.js'
+import  panelImage   from './imagen/imagen.js'
+
 
 const panelsArray = [
     panelMain,

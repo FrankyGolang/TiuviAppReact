@@ -104,9 +104,10 @@ function MainPanelSelect(props){
     )
 }
 
-export const panelMain = {
+const panelMain = {
     name: 'main',
     panel: MainPanel,
     panelList: MainPanelList,
     panelSelect: MainPanelSelect,
 };
+export default  panelMain 

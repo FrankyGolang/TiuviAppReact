@@ -102,9 +102,11 @@ function ImagenPanelSelect(props){
         </ListItemButton>)
 }
 
-export const panelImage = {
+const panelImage = {
     name: 'imagen',
     panel: ImagenPanel,
     panelList: ImagenPanelList,
     panelSelect: ImagenPanelSelect,
 };
+
+export default  panelImage 

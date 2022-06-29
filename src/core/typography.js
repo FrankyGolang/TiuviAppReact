@@ -12,6 +12,16 @@ import { useGlobalContext } from './options.js'
 import { reader } from './sVoice.js'
 
 
+//Alertas globales.
+import AlertTitle from '@mui/material/AlertTitle';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+
+//Voicer para las alertas
+import { sVoice } from './sVoice.js';
+
+
 
 export function styleTitle(FW, newAtr) {
 
@@ -94,20 +104,21 @@ export function styleText(FW, newAtr) {
 function NewTypography(tag, style) {
 
     const globalContext = useGlobalContext();
-    
+    const modeTheme = globalContext.userOptions.modeTheme();
+    console.log('NewTypography', modeTheme)
 
-    cTheme[globalContext.mode].components.MuiTypography.variants ??= []
+    cTheme[modeTheme].components.MuiTypography.variants ??= []
 
-    const found = cTheme[globalContext.mode].components.MuiTypography.variants.find(element => element.props.variant === tag);
+    const found = cTheme[modeTheme].components.MuiTypography.variants.find(element => element.props.variant === tag);
 
     if (found === undefined) {
 
-        cTheme[globalContext.mode].components.MuiTypography.variants.push({
+        cTheme[modeTheme].components.MuiTypography.variants.push({
             props: { variant: tag },
             style: styleText(400, style),
         });
 
-        cTheme[globalContext.mode].components.MuiTypography.defaultProps.variantMapping[tag] = tag
+        cTheme[modeTheme].components.MuiTypography.defaultProps.variantMapping[tag] = tag
 
     }
 
@@ -119,7 +130,7 @@ function NewTypography(tag, style) {
 export function Mark(props) {
 
     const globalContext = useGlobalContext();
-
+    const modeTheme = globalContext.userOptions.modeTheme();
 
 
     NewTypography( "mark", [
@@ -129,8 +140,8 @@ export function Mark(props) {
         { name: "&:hover", value: { backgroundColor: "cornflowerblue", } },
         { name: "&:focus", value: { backgroundColor: "cornflowerblue", } },
         {
-            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('background-color', {
-                duration: cTheme[globalContext.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[modeTheme].transitions.create('background-color', {
+                duration: cTheme[modeTheme].transitions.duration.long,
             })}`
         },
     ])
@@ -151,6 +162,7 @@ export function Mark(props) {
 export function Em(props) {
 
     const globalContext = useGlobalContext();
+    const modeTheme = globalContext.userOptions.modeTheme();
 
     NewTypography( "em", [
         { name: "backgroundColor", value: "lawngreen" },
@@ -160,8 +172,8 @@ export function Em(props) {
         { name: "&:hover", value: { backgroundColor: "seagreen", } },
         { name: "&:focus", value: { backgroundColor: "seagreen", } },
         {
-            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('background-color', {
-                duration: cTheme[globalContext.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[modeTheme].transitions.create('background-color', {
+                duration: cTheme[modeTheme].transitions.duration.long,
             })}`
         },
     ])
@@ -181,6 +193,7 @@ export function Em(props) {
 export function U(props) {
 
     const globalContext = useGlobalContext();
+    const modeTheme = globalContext.userOptions.modeTheme();
 
     NewTypography( "u", [
         { name: "backgroundColor", value: "orange" },
@@ -191,8 +204,8 @@ export function U(props) {
         { name: "&:hover", value: { backgroundColor: "darkorange", } },
         { name: "&:focus", value: { backgroundColor: "darkorange", } },
         {
-            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('background-color', {
-                duration: cTheme[globalContext.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[modeTheme].transitions.create('background-color', {
+                duration: cTheme[modeTheme].transitions.duration.long,
             })}`
         },
     ])
@@ -213,6 +226,7 @@ export function U(props) {
 export function A(props) {
 
     const globalContext = useGlobalContext();
+    const modeTheme = globalContext.userOptions.modeTheme();
 
     NewTypography( "a", [
         { name: "borderRadius", value: "5px" },
@@ -221,8 +235,8 @@ export function A(props) {
         { name: "textDecoration", value: "underline" },
         { name: "&:hover", value: { "color": "skyblue", } },
         {
-            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('color', {
-                duration: cTheme[globalContext.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[modeTheme].transitions.create('color', {
+                duration: cTheme[modeTheme].transitions.duration.long,
             })}`
         },
     ])
@@ -373,14 +387,15 @@ export function P2(props) {
 export function PList(props) {
 
     const globalContext = useGlobalContext();
+    const modeTheme = globalContext.userOptions.modeTheme();
 
     NewTypography( "p", [
         { name: "borderRadius", value: "5px" },
         { name: "color", value: props.color },
         { name: "cursor", value: "pointer" },
         {
-            name: "transition", value: `${cTheme[globalContext.mode].transitions.create('color', {
-                duration: cTheme[globalContext.mode].transitions.duration.long,
+            name: "transition", value: `${cTheme[modeTheme].transitions.create('color', {
+                duration: cTheme[modeTheme].transitions.duration.long,
             })}`
         },
     ])
@@ -438,3 +453,34 @@ export function Overline(props) {
 
 
 
+
+export function AlertsGlobal(props){
+
+    const globalContext = useGlobalContext();
+
+    const message = props.message
+
+    if (message === undefined) return null;
+    if (message.message === undefined) return null;
+
+    message.variant = message.variant !== undefined ?  message.variant : 'standard' 
+    message.severity    = message.severity !== undefined ?  message.severity : 'info' 
+    message.title   = message.title !== undefined ? <AlertTitle>{message.title}</AlertTitle> : null
+    globalContext.voice === "on" && sVoice.Speaker(message.message)
+
+
+    return(<Stack sx={{ 
+        bgcolor: 'background.default',
+        width: '100%'
+         }} spacing={2}>
+        <Alert 
+            icon={message.icon !== undefined ?  message.icon : true }
+            variant={message.variant}
+            severity={message.severity}
+            onClose={(event) => globalContext.setMessage(event, 'delete')}>
+            
+        {message.title}
+        {message.message}
+        </Alert>
+  </Stack>)
+}

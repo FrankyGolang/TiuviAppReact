@@ -90,9 +90,10 @@ function MusicaPanelSelect(props){
         </ListItemButton>)
 }
 
-export const panelMusica = {
+const panelMusica  = {
     name: 'musica',
     panel: MusicaPanel,
     panelList: MusicaPanelList,
     panelSelect: MusicaPanelSelect,
 };
+export default panelMusica;

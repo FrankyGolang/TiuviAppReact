@@ -8,11 +8,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import SelectPanel from './core/selectpanel.js'
 
+//Alertas
+import { AlertsGlobal } from './core/typography.js'
 //Proximamente login
 import FormReact from './core/FormReact.js';
 
-
-
+import { ViewerButton } from './core/viewer.js'
 
 
 
@@ -21,14 +22,19 @@ export default function App() {
 
 
 
-  const [mode, setMode] = useState(global.mode);
+  const [mode, setMode] = useState(global.userOptions.getMode());
   global.toggleTheme = () => {
 
     setMode(() => {
 
-      global.mode = global.mode === "light" ? "dark" : "light"
-      localStorage.setItem('themeMode', global.mode);
-      return global.mode
+      if( mode === "light"){
+        global.userOptions.setMode("dark")
+        return "dark"
+      } else {
+        global.userOptions.setMode("light")
+        return "light"
+      }
+ 
     })
   }
 
@@ -55,7 +61,7 @@ export default function App() {
   }
 
 
-  const [menu, setMenu] = React.useState(global.menu);
+  const [menu, setMenu] = useState(global.menu);
   global.selectMenu = (event, newValue)  => {
     global.menu = newValue
     localStorage.setItem('menu', newValue);
@@ -63,35 +69,93 @@ export default function App() {
   }
 
   //Añadir select menus a navigation
-  const [menusActive , selectMenus] = React.useState(global.menusActive);
-  global.selectMenusActive = (event, newValue)  => {
-
-
-
-  }
-
-
+  const [panel , setPanel] = useState(global.panel);
   const [navValue, setNavigation] = React.useState(global.navigation);
   global.selectNavigation = (event, newValue)  => {
+
+    if(global.isPanel(newValue)) {
+
+      if(global.panel !== newValue){
+
+        global.panel = newValue
+        localStorage.setItem('panel', newValue);
+        setPanel(newValue)
+
+      }
+    }
+    
 
     global.navigation = newValue
     localStorage.setItem('navigation', newValue);
     setNavigation(newValue)
   }
 
+  const [token, setToken] = useState(global.token);
+  global.setToken = (event , newValue)  => {
 
+    global.token = newValue
+    setToken(newValue)
+  }
 
+  const [message, setMessage] = useState(global.message);
+  global.setMessage = (event , newValue)  => {
+
+    if (newValue === "delete"){
+      setMessage(prevState => {
+        prevState.shift();
+        return [...prevState];
+      })
+    }
+
+    if (typeof newValue === 'string' && newValue !== "delete"){
+
+      setMessage(prevState => {
+        return [...prevState, {  
+          message: newValue , 
+      }];
+      })
+    }
+
+    if (typeof newValue === 'object'){
+      setMessage(prevState => {
+        return [...prevState, newValue];
+      })
+    }
+  }
+
+  const [accessViewer, setAccessViewer] = useState(global.viewerOptions.getAccess());
+  global.accessViewer = () => {
+
+    setAccessViewer(accessViewer ? false : true)
+
+  }
+
+  let render = null
+  if (token !== "null" || accessViewer){
+
+    render = <SelectPanel />
+
+  } else {
+
+    render = <>
+        <FormReact />
+      <ViewerButton />
+      </>;
+  }
 
 
 
   return (
 
 <GlobalContext.Provider value={global}>
-    <ThemeProvider theme={cTheme[global.mode]}>
+    <ThemeProvider theme={cTheme[mode]}>
       <CssBaseline  enableColorScheme />
 
-      <SelectPanel />
-     
+  
+      <AlertsGlobal message={message.at(0)} />
+
+      {render}
+      
     </ThemeProvider>
     </GlobalContext.Provider>
 

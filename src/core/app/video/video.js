@@ -85,10 +85,10 @@ function VideoPanelSelect(props){
         </ListItemButton>)
 }
 
-
-export const panelVideo = {
+const panelVideo = {
     name: 'video',
     panel: VideoPanel,
     panelList: VideoPanelList,
     panelSelect: VideoPanelSelect,
 };
+export default panelVideo;

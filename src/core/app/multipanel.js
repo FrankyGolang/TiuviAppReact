@@ -12,7 +12,10 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
 
+function Error404(){
 
+  return ( <h1>Error 404</h1>);
+}
 
 export default function MultiPanel(props){
 
@@ -26,6 +29,10 @@ export default function MultiPanel(props){
     } else if(navigation.hasOwnProperty(globalContext.navigation)){
 
       Panel = navigation[globalContext.navigation];
+
+    }else {
+
+      Panel = Error404;
 
     }
     
@@ -48,7 +55,11 @@ export default function MultiPanel(props){
            
           
       <Paper variant="outlined"
-      sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+      sx={{ position: 'fixed', 
+      bottom: 0, 
+      left: 0, 
+      right: 0 
+      }} elevation={3}>
         <BottomNavigation
         showLabels
         value={globalContext.navigation}
@@ -58,8 +69,10 @@ export default function MultiPanel(props){
               variant="main"
               label="menu"
               value="panel1"
-              {...(globalContext.navigation === "panel1" && {icon:<MenuIcon fontSize='large' />})}
-              {...(globalContext.navigation !== "panel1" && {icon:<ArrowBackTwoToneIcon fontSize='large' />})}
+
+              {...(globalContext.navigation !== "panel1" &&
+              globalContext.panel === "panel1" ?
+              {icon:<ArrowBackTwoToneIcon fontSize='large' /> }: {icon:<MenuIcon fontSize='large' />})}
          
             />
 
@@ -67,21 +80,30 @@ export default function MultiPanel(props){
               variant="main"
               label={props.panel2Label}
               value="panel2"
-              icon={props.panel2icon}
+              {...(globalContext.navigation !== "panel2" &&
+              globalContext.panel === "panel2" ?
+              {icon:<ArrowBackTwoToneIcon fontSize='large' /> }: {icon: props.panel2icon})}
+          
             />
     
             <BottomNavigationAction
               variant="main"
               label={props.panel3Label}
               value="panel3"
-              icon={props.panel3icon}
+              {...(globalContext.navigation !== "panel3" &&
+              globalContext.panel === "panel3" ?
+              {icon:<ArrowBackTwoToneIcon fontSize='large' /> }: {icon: props.panel3icon})}
+          
             />
     
             <BottomNavigationAction
               variant="main"
               label={props.panel4Label}
               value="panel4"
-              icon={props.panel4icon}
+              {...(globalContext.navigation !== "panel4" &&
+              globalContext.panel === "panel4" ?
+              {icon:<ArrowBackTwoToneIcon fontSize='large' /> }: {icon: props.panel4icon})}
+          
             />
     
         {props.panel5icon !== undefined &&
@@ -89,8 +111,11 @@ export default function MultiPanel(props){
                   variant="main"
                   label={props.panel5Label}
                   value="panel5"
-                  icon={props.panel5icon}
-                />
+                  {...(globalContext.navigation !== "panel5" &&
+                  globalContext.panel === "panel5" ?
+                  {icon:<ArrowBackTwoToneIcon fontSize='large' /> }: {icon: props.panel5icon})}
+              
+                  />
           
         }
 
