@@ -17,6 +17,9 @@ import { ViewerButton } from './core/viewer.js'
 
 
 
+const ViewerShadow = global.viewerOptions.ViewerShadow
+
+const  messageSend = []
 
 export default function App() {
 
@@ -97,51 +100,75 @@ export default function App() {
     setToken(newValue)
   }
 
+
+
+function isMensageRepeat(newValue){
+
+  console.log(messageSend)
+  console.log(newValue)
+
+    const found = messageSend.find(element => element === newValue);
+    if (found !== undefined){
+        return true
+    }
+
+    messageSend.push(newValue);
+    return false
+}
+
+
   const [message, setMessage] = useState(global.message);
-  global.setMessage = (event , newValue)  => {
+  global.setMessage = (newValue)  => {
+
+ 
+    if(newValue === null){
+      return
+    }
 
     if (newValue === "delete"){
       setMessage(prevState => {
         prevState.shift();
         return [...prevState];
       })
+      return
     }
 
-    if (typeof newValue === 'string' && newValue !== "delete"){
+    if (typeof newValue === 'string'){
+
+      if( isMensageRepeat(newValue) ) {
+        return
+      }
 
       setMessage(prevState => {
-        return [...prevState, {  
+        return [ {  
           message: newValue , 
-      }];
+      }, ...prevState];
       })
+      return
     }
 
     if (typeof newValue === 'object'){
+
+      if( isMensageRepeat(newValue.message) ) {
+        return
+      }
+
       setMessage(prevState => {
-        return [...prevState, newValue];
+        return [ newValue , ...prevState];
       })
     }
-  }
 
-  const [accessViewer, setAccessViewer] = useState(global.viewerOptions.getAccess());
-  global.accessViewer = () => {
-
-    setAccessViewer(accessViewer ? false : true)
 
   }
 
-  let render = null
-  if (token !== "null" || accessViewer){
+  const [accessViewer, setAccessViewer] = useState(global.viewerOptions.haveAccess());
+  global.accessViewer = (swichViewer) => {
 
-    render = <SelectPanel />
-
-  } else {
-
-    render = <>
-        <FormReact />
-      <ViewerButton />
-      </>;
+    setAccessViewer(() => global.viewerOptions.haveAccess(swichViewer))
+    
   }
+
+
 
 
 
@@ -151,10 +178,15 @@ export default function App() {
     <ThemeProvider theme={cTheme[mode]}>
       <CssBaseline  enableColorScheme />
 
-  
+     
       <AlertsGlobal message={message.at(0)} />
 
-      {render}
+      <ViewerShadow />
+
+      {token !== "null" || accessViewer === true ? <SelectPanel /> : <>
+        <FormReact />
+      <ViewerButton />
+      </>}
       
     </ThemeProvider>
     </GlobalContext.Provider>

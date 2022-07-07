@@ -6,118 +6,99 @@
 // clase
 const unixHandle = {
 
-
-    //Añadidas despues
-    timeUnixSet:  Date.now(),
-    timeUnixUpdate: null,
-
-    idCounter: null,
-    counter: 0,
-    exe: null,
-
-    resetTimeUnixUpdate: function(){
-        this.timeUnixUpdate = null
-    },
-
     checkTimeUnix: function(number){
         
         if( typeof number !== 'number') return true
-        if( typeof number < 1) return true
+        if( typeof number < 0) return true
 
         return false
     },
 
-    newTimeUnix: function(){
 
-        this.timeUnixSet    = Date.now();
-        this.resetTimeUnixUpdate()
+    addSeconds: function(timeUnix, seconds) {
+
+        if(this.checkTimeUnix(seconds)) return null;
+        if(this.checkTimeUnix(timeUnix)) return null;
+
+        return timeUnix + (1000 * seconds)
+     
+    },
+    
+     addMinutes: function(timeUnix, minutes) {
+    
+        if(this.checkTimeUnix(minutes)) return null;
+        if(this.checkTimeUnix(timeUnix)) return null;
+
+        return timeUnix + (1000 * 60 * minutes)
+     
+    },
+    
+     addHours: function(timeUnix, hours) {
+    
+        if(this.checkTimeUnix(hours)) return null;
+        if(this.checkTimeUnix(timeUnix)) return null;
+
+        return timeUnix + (1000 * 60 * 60 * hours)
+     
+    },
+    
+     addDays: function(timeUnix, days) {
+    
+        if(this.checkTimeUnix(days)) return null;
+        if(this.checkTimeUnix(timeUnix)) return null;
+
+        return timeUnix + (1000 * 60 * 60 * 24 *days)
+     
+    },
+    seconds: function(seconds){
+        return ( seconds)
+    },
+    minutes: function(minutes){
+        return ( 60 * minutes)
+    },
+    hours:function(hours){
+        return  ( 60 * 60 * hours)
+    },
+    days: function(days){
+        return ( 60 * 60 * 24 *days)
     },
 
-    setTimeUnix: function(unix) {
+    timeunixLabel: function(timeunix){
 
-        this.timeUnixSet = unix;
-        this.resetTimeUnixUpdate()
-    },
+  
+        if(timeunix < 60){
 
-    switchTime: function (){
-
-        if (this.timeUnixUpdate !== null){
-
-            return this.timeUnixUpdate;
-
-        }else if(this.timeUnixSet !== null){
-
-            return this.timeUnixSet;
-
-        }else {
-
-            return 0;
+            const label = timeunix === 1 ? 'segundo' : 'segundos'
+            return timeunix + ' ' +  label
         }
-    },
 
-    addSeconds: function( seconds) {
+        if(timeunix < (60 * 60)){
 
-        if(this.checkTimeUnix(seconds)) return false;
-
-        this.timeUnixUpdate = this.switchTime() + (1000 * seconds)
-     
-    },
+            const time = Math.round(timeunix / 60)
+            const label = time === 1 ? 'minuto' : 'minutos'
     
-     addMinutes: function( minutes) {
-    
-        if(this.checkTimeUnix(minutes)) return false;
+            return time + ' ' +  label
+        }
 
-        this.timeUnixUpdate = this.switchTime() + (1000 * 60 * minutes)
-     
-    },
-    
-     addHours: function( hours) {
-    
-        if(this.checkTimeUnix(hours)) return false;
+        if(timeunix < (60 * 60 * 24)){
 
-        this.timeUnixUpdate = this.switchTime() + (1000 * 60 * 60 * hours)
-     
-    },
-    
-     addDays: function( days) {
-    
-        if(this.checkTimeUnix(days)) return false;
-
-        this.timeUnixUpdate = this.switchTime() + (1000 * 60 * 60 * 24 *days)
-     
-    },
-
-    counterBack: function(seconds, exe){
-
-        this.counter = seconds;
-        this.exe     = exe;
-
-        this.idCounter = setInterval(() => {
-
-            this.counter = this.counter -10;
-
-            if (this.counter < 0){
-
-                clearInterval(this.idCounter);
-                this.exe !== null && this.exe()
-            }
-
-        } ,10000)
+            const time = Math.round(timeunix / (60 * 60))
+            const label = time === 1 ? 'hora' : 'horas'
             
-    },
+            return time + ' ' + label
+        }
 
+        if(timeunix < (60 * 60 * 24 * 365)){
 
-    getUnix: function(){
+            const time = Math.round(timeunix / (60 * 60 * 24))
+            const label = time === 1 ? 'días' : 'día'
+      
+            return time + ' ' +  label
+        }
 
-        return this.switchTime()
+        return 'desconocida'
 
-    },
-
-    transformToDate:function(){
-        
-        return new Date(this.switchTime())
-
-    },
+    }
 }
 
 export default unixHandle

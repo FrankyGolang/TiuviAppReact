@@ -477,7 +477,7 @@ export function AlertsGlobal(props){
             icon={message.icon !== undefined ?  message.icon : true }
             variant={message.variant}
             severity={message.severity}
-            onClose={(event) => globalContext.setMessage(event, 'delete')}>
+            onClose={() => globalContext.setMessage('delete')}>
             
         {message.title}
         {message.message}

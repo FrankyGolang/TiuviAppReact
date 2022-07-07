@@ -13,7 +13,7 @@ const userOptions = {
 
     getMode: () => {
 
-        let modeThemeString = callLocalStorage.getKey('userOptions', 'modeTheme');
+        let modeThemeString = callLocalStorage.getKeyString('userOptions', 'modeTheme');
 
         if ( !modeThemeString) {
 
